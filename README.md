@@ -1,29 +1,30 @@
-# Tododeia — Multi-Agent Investment Analysis Skill
+# Portafolio — Multi-Agent Market Analysis Skill
 
-**by @soyenriquerocha**
+**by Cristhian White | Diggital Accelerator**
 
-A Claude Code skill that spawns 5 specialized AI research agents to analyze investment opportunities across crypto, stocks, forex, and commodities. Adapts to your risk profile, tracks historical accuracy, and generates an interactive Next.js dashboard with full Spanish/English support.
+A Claude Code skill that spawns 5 specialized AI research agents to analyze markets across crypto, stocks, forex, and commodities. Adapts to your risk profile and personal watchlist, tracks historical accuracy, and generates a branded interactive Next.js dashboard with 3 themes and full Spanish/English support.
 
-> **[Leer en Espanol](#espanol)**
+> **[Leer en Español](#español)**
 
 ---
 
 ## What Is This?
 
-Tododeia is a **Claude Code skill** — a reusable prompt-and-tooling package that extends what Claude can do. When installed, Claude gains the ability to run a full multi-agent investment research workflow: 4 sector analysts research in parallel, a strategy agent synthesizes everything, and the result is served as an interactive dashboard in your browser.
+**Portafolio** is a **Claude Code skill** — a reusable prompt-and-tooling package that extends what Claude can do. When installed, Claude gains the ability to run a full multi-agent market research workflow: 4 sector analysts research in parallel, a strategy agent synthesizes everything (including your personal watchlist), and the result is served as an interactive dashboard in your browser.
 
 ## How It Works
 
 ```
                          ┌──────────────┐
                     ┌────┤  You trigger  ├────┐
-                    │    │  "analyze     │    │
-                    │    │   markets"    │    │
+                    │    │  "analizar   │    │
+                    │    │  mercados"   │    │
                     │    └──────────────┘    │
                     ▼                        ▼
             ┌──────────────┐        ┌──────────────┐
-            │ Risk Profile │        │ Load History  │
-            │   Question   │        │  (if exists)  │
+            │ User Config  │        │ Load History  │
+            │ (watchlist,  │        │  (accuracy    │
+            │  risk, theme)│        │   tracking)   │
             └──────┬───────┘        └──────┬───────┘
                    │                       │
                    ▼                       │
@@ -41,11 +42,11 @@ Tododeia is a **Claude Code skill** — a reusable prompt-and-tooling package th
                    │                       │
                    ▼                       ▼
           ┌────────────────────────────────────┐
-          │        Strategy Agent               │
+          │         Strategy Agent              │
           │  (cross-sector analysis,            │
           │   risk-adjusted ranking,            │
           │   portfolio allocation,             │
-          │   historical accuracy check)        │
+          │   Mi Portafolio — your watchlist)   │
           └────────────────┬───────────────────┘
                            │
                     ┌──────┴──────┐
@@ -59,32 +60,34 @@ Tododeia is a **Claude Code skill** — a reusable prompt-and-tooling package th
               ┌──────────────────────┐
               │   Next.js Dashboard  │
               │   localhost:3420     │
-              │   EN / ES toggle    │
+              │   3 themes | EN/ES  │
               └──────────────────────┘
 ```
 
 ## Features
 
-- **5 AI Agents**: 4 sector researchers + 1 strategy synthesizer, all running in parallel
-- **Dynamic Asset Discovery**: Agents don't follow a fixed list — they find the most relevant assets based on current market conditions
-- **Risk Profiles**: Conservative, moderate, or aggressive — recommendations, position sizes, and allocations adapt to you
-- **Social Sentiment**: Twitter/X and Reddit sentiment analysis per asset
-- **Source Verification**: Cross-references prices from 2+ sources with agreement scoring
-- **Historical Accuracy**: Compares past recommendations to actual outcomes over time
-- **Portfolio Allocation**: Suggested % allocation across sectors based on your risk profile
-- **Cross-Sector Insights**: Correlations and divergences that individual agents can't see
-- **Spanish/English**: Full bilingual support — UI chrome AND report data translate when you toggle
-- **Interactive Dashboard**: Charts, expandable sector analysis, top picks grid, risk warnings
-- **Scheduling**: Option to run daily or weekly with automatic reports
+| Feature | Description |
+|---------|-------------|
+| **5 AI Agents** | 4 sector researchers + 1 strategy synthesizer, all in parallel |
+| **Mi Portafolio** | Personal section with your watchlist assets — price in USD + local currency, buy/hold/sell |
+| **3 Dashboard Themes** | Dark Terminal, Dark Fintech, Light — set during setup |
+| **Setup Wizard** | `/portafolio-setup` configures risk profile, local currency, watchlist, theme, and language |
+| **Dynamic Asset Discovery** | Agents discover the most relevant assets based on current market conditions |
+| **Risk Profiles** | Conservative, moderate, or aggressive — adapts recommendations, position sizes, and allocations |
+| **Social Sentiment** | Twitter/X and Reddit sentiment analysis per asset |
+| **Source Verification** | Cross-references prices from 2+ sources with agreement scoring |
+| **Historical Accuracy** | Compares past recommendations to actual outcomes over time |
+| **Cross-Sector Insights** | Correlations and divergences that individual agents can't see |
+| **Spanish/English** | Full bilingual support — UI AND report data translate when you toggle |
 
 ## Sectors Covered
 
 | Sector | Always Includes | Dynamically Discovers |
 |--------|----------------|----------------------|
-| Crypto | BTC, ETH | Trending altcoins, DeFi tokens, AI tokens |
-| Stocks | S&P 500, NASDAQ | Top movers, catalyst-driven stocks across sectors |
-| Forex | DXY, USD/MXN | Pairs affected by current events |
-| Commodities | Gold, Oil WTI | Agricultural, energy, metals based on market conditions |
+| Crypto | BTC, ETH + your watchlist | Trending altcoins, DeFi tokens, AI tokens |
+| Stocks | S&P 500, NASDAQ + your watchlist | Top movers, catalyst-driven stocks |
+| Forex | DXY + your local currency pair | Pairs affected by current macro events |
+| Commodities | Gold, Oil WTI + your watchlist | Agricultural, energy, metals by market conditions |
 
 ## Requirements
 
@@ -97,333 +100,207 @@ Tododeia is a **Claude Code skill** — a reusable prompt-and-tooling package th
 ### Option A: One-liner (fastest)
 
 ```bash
-curl -sL https://raw.githubusercontent.com/Hainrixz/maia-skill/main/install.sh | bash
+curl -sL https://raw.githubusercontent.com/DiggitalAccelerator/portafolio/main/install.sh | bash
 ```
 
 This clones the repo, symlinks the skill into Claude Code, and installs dashboard dependencies automatically.
 
-### Option B: Claude Code plugin
-
-```bash
-claude plugin install Hainrixz/maia-skill
-```
-
-### Option C: Manual setup
+### Option B: Manual setup
 
 ```bash
 # 1. Clone the repo
-git clone https://github.com/Hainrixz/maia-skill.git
+git clone https://github.com/DiggitalAccelerator/portafolio.git ~/.claude/plugins/portafolio
 
 # 2. Symlink skill into Claude Code
 mkdir -p ~/.claude/skills
-ln -s "$(pwd)/maia-skill/.claude/skills/investment-analysis" ~/.claude/skills/investment-analysis
+ln -s ~/.claude/plugins/portafolio/.claude/skills/portafolio ~/.claude/skills/portafolio
 
 # 3. Install dashboard dependencies
-npm install --prefix maia-skill/dashboard
+npm install --prefix ~/.claude/plugins/portafolio/dashboard
 ```
 
-The skill auto-activates when you mention investment-related topics in Claude Code.
+## Quick Start
 
-## Usage
-
-In any Claude Code conversation:
-
-- "Run an investment analysis"
-- "What are the best investment opportunities today?"
-- "Analyze the markets"
-- "Give me a market report"
-- "Run tododeia"
-
-You'll be asked your risk profile (conservative, moderate, or aggressive), then the 5 agents go to work. The report opens at `http://localhost:3420`.
-
-### Language Toggle
-
-When you first open the dashboard, you'll be asked to pick English or Spanish. All report content — summaries, reasoning, news headlines, insights, warnings — translates to your chosen language. Numbers, prices, tickers, and percentages stay as-is.
-
-You can switch languages anytime from the toolbar.
-
-### Scheduling (Optional)
-
-After your first report, you can set up recurring analysis:
-
+**Step 1 — Configure your profile:**
 ```
-/loop 24h /investment-analysis    # Daily reports
-/loop 168h /investment-analysis   # Weekly reports
+/portafolio-setup
 ```
+This sets your risk profile, local currency (COP, MXN, USD, etc.), personal watchlist, dashboard theme, and language.
+
+**Step 2 — Run your analysis:**
+```
+/portafolio
+```
+Or just say: "analizar mercados", "reporte de portafolio", "market analysis"
+
+The report opens at `http://localhost:3420`.
+
+## Dashboard Themes
+
+| Theme | Style |
+|-------|-------|
+| **Dark Terminal** | Black background, green monospace text, scanline effect |
+| **Dark Fintech** | Deep navy, indigo/cyan accents, glassmorphism cards |
+| **Light** | Clean white, blue accents, soft shadows |
+
+Set your theme with `/portafolio-setup` — it applies automatically each time you run the skill.
 
 ## Project Structure
 
 ```
-.claude/skills/investment-analysis/
-  SKILL.md              # Skill definition (orchestrator instructions)
-  assets/
-    template.html       # Fallback HTML report (no Node.js)
-  references/
-    agent-prompts.md    # Prompts for all 5 agents
-  dashboard/            # Next.js interactive dashboard
-    src/
-      app/              # App router pages
-      components/       # Report UI components
-      hooks/            # Language + data hooks
-      lib/              # Translations, constants
-      types/            # TypeScript types
-    public/data/        # Generated report JSON (created at runtime)
+portafolio/
+├── .claude/skills/portafolio/
+│   ├── SKILL.md              # Orchestrator (10-step workflow)
+│   └── setup.md              # Setup wizard skill
+├── references/
+│   └── agent-prompts.md      # Prompts for all 5 agents
+├── config/
+│   └── user-config.json      # Generated by /portafolio-setup
+├── dashboard/                # Next.js interactive dashboard
+│   ├── src/
+│   │   ├── app/              # App router pages + themes CSS
+│   │   ├── components/report/ # Report UI components
+│   │   │   └── MyPortfolio.tsx  # Personal watchlist section
+│   │   ├── hooks/            # Theme, language, data hooks
+│   │   ├── lib/              # Translations, constants, themes
+│   │   └── types/            # TypeScript types
+│   └── public/data/          # Generated report JSON (runtime)
+├── output/history/           # Report history for accuracy tracking
+├── assets/
+│   └── template.html         # Fallback HTML (no Node.js)
+└── install.sh
 ```
 
 ## Customization
 
-### Assets & Agent Behavior
+### Watchlist & Agent Behavior
+
+Run `/portafolio-setup` to update your watchlist. For forex and commodities, edit `config/user-config.json` directly:
+
+```json
+{
+  "watchlist": {
+    "crypto": ["BTC", "ETH", "SOL"],
+    "stocks": ["AAPL", "NVDA", "MELI"],
+    "forex": ["USD/COP", "EUR/COP"],
+    "commodities": ["Gold", "WTI", "Litio"]
+  }
+}
+```
+
+### Agent Prompts
 
 Edit `references/agent-prompts.md` to change which assets each agent researches, how they search, or what data they prioritize.
 
-### Risk Profiles
-
-The Strategy Agent prompt in `references/agent-prompts.md` defines how each risk profile affects scoring and allocation. Customize the multipliers and allocation ranges there.
-
-### Dashboard Styling
-
-The dashboard uses Tailwind CSS. Edit components in `dashboard/src/components/report/` to change the look and feel.
-
 ### Translations
 
-Add or modify UI translations in `dashboard/src/lib/translations.ts`. Report data translation happens automatically via the translation agent (Step 8b in SKILL.md).
-
-## Dashboard Features
-
-- **Executive summary** with macro environment assessment
-- **Portfolio allocation** chart with recommended percentages
-- **Risk-adjusted top picks** grid with confidence scores and position sizing
-- **Cross-sector insights** highlighting correlations between markets
-- **Expandable sector panels** with detailed per-asset analysis
-- **Charts**: allocation breakdown, risk vs. confidence visualization
-- **Historical accuracy** tracking past recommendation performance
-- **Risk warnings** when the strategy agent detects concerns
-- **Full bilingual support** — English and Spanish, including all data
-
-## Fallback Mode
-
-If Node.js is not available, the skill falls back to generating a standalone `output/report.html` file using the HTML template in `assets/`. This is served via Python's built-in HTTP server on port 8420.
+Add or modify UI translations in `dashboard/src/lib/translations.ts`.
 
 ## Disclaimer
 
-This tool is for **informational and educational purposes only**. It does not constitute financial advice, investment recommendations, or solicitation to buy or sell any securities, cryptocurrencies, or commodities. AI-generated analysis may contain errors and should not be relied upon for investment decisions. Always consult a qualified financial advisor before making investment decisions. Past performance is not indicative of future results. Tododeia and its creators assume no liability for investment losses.
+This tool is for **informational and educational purposes only**. It does not constitute financial advice, investment recommendations, or solicitation to buy or sell any securities, cryptocurrencies, or commodities. AI-generated analysis may contain errors and should not be relied upon for investment decisions. Always consult a qualified financial advisor. Past performance is not indicative of future results.
 
 ---
 
-<a id="espanol"></a>
+<a id="español"></a>
 
-# Tododeia — Skill de Analisis de Inversiones Multi-Agente
+# Portafolio — Skill de Análisis Multi-Agente de Mercados
 
-**por @soyenriquerocha**
+**por Cristhian White | Diggital Accelerator**
 
-Un skill de Claude Code que lanza 5 agentes de investigacion especializados para analizar oportunidades de inversion en crypto, acciones, forex y materias primas. Se adapta a tu perfil de riesgo, rastrea la precision historica y genera un dashboard interactivo en Next.js con soporte completo en espanol e ingles.
+Un skill de Claude Code que lanza 5 agentes de investigación especializados para analizar mercados en crypto, acciones, forex y materias primas. Se adapta a tu perfil de riesgo y watchlist personal, rastrea la precisión histórica y genera un dashboard interactivo con 3 temas y soporte completo español/inglés.
 
-> **[Read in English](#tododeia--multi-agent-investment-analysis-skill)**
+> **[Read in English](#portafolio--multi-agent-market-analysis-skill)**
 
-## Que es esto?
+---
 
-Tododeia es un **skill de Claude Code** — un paquete reutilizable de prompts y herramientas que extiende lo que Claude puede hacer. Una vez instalado, Claude puede ejecutar un flujo completo de investigacion de inversiones con multiples agentes: 4 analistas sectoriales investigan en paralelo, un agente estrategico sintetiza todo, y el resultado se sirve como un dashboard interactivo en tu navegador.
+## ¿Qué es esto?
 
-## Como funciona
+**Portafolio** es un **skill de Claude Code** — un paquete reutilizable de prompts y herramientas que extiende lo que Claude puede hacer. Una vez instalado, Claude ejecuta un flujo completo de análisis de mercados con múltiples agentes: 4 analistas sectoriales investigan en paralelo, un agente estratégico sintetiza todo (incluyendo tu watchlist personal), y el resultado se sirve como dashboard interactivo en tu navegador.
 
-```
-                         ┌──────────────┐
-                    ┌────┤  Tu escribes  ├────┐
-                    │    │  "analiza    │    │
-                    │    │  mercados"   │    │
-                    │    └──────────────┘    │
-                    ▼                        ▼
-            ┌──────────────┐        ┌──────────────┐
-            │Perfil Riesgo │        │Cargar Histor.│
-            │  Pregunta    │        │ (si existe)  │
-            └──────┬───────┘        └──────┬───────┘
-                   │                       │
-                   ▼                       │
-    ┌──────────────────────────────┐       │
-    │     4 Agentes Sectoriales    │       │
-    │  (investigacion en paralelo) │       │
-    │                              │       │
-    │  ┌───────┐  ┌──────────┐   │       │
-    │  │Crypto │  │Acciones  │   │       │
-    │  └───────┘  └──────────┘   │       │
-    │  ┌───────┐  ┌──────────┐   │       │
-    │  │ Forex │  │Mat.Primas│   │       │
-    │  └───────┘  └──────────┘   │       │
-    └──────────────┬───────────────┘       │
-                   │                       │
-                   ▼                       ▼
-          ┌────────────────────────────────────┐
-          │      Agente de Estrategia           │
-          │  (analisis inter-sectorial,         │
-          │   ranking ajustado por riesgo,      │
-          │   asignacion de portafolio,         │
-          │   verificacion de precision)        │
-          └────────────────┬───────────────────┘
-                           │
-                    ┌──────┴──────┐
-                    ▼             ▼
-            ┌────────────┐ ┌────────────┐
-            │ report.json│ │report-es   │
-            │ (Ingles)   │ │  .json     │
-            └──────┬─────┘ └──────┬─────┘
-                   │              │
-                   ▼              ▼
-              ┌──────────────────────┐
-              │  Dashboard Next.js   │
-              │   localhost:3420     │
-              │   EN / ES toggle    │
-              └──────────────────────┘
-```
+## Características
 
-## Caracteristicas
-
-- **5 Agentes IA**: 4 investigadores sectoriales + 1 sintetizador de estrategia, todos en paralelo
-- **Descubrimiento Dinamico**: Los agentes no siguen una lista fija — encuentran los activos mas relevantes segun las condiciones actuales del mercado
-- **Perfiles de Riesgo**: Conservador, moderado o agresivo — las recomendaciones, tamanos de posicion y asignaciones se adaptan a ti
-- **Sentimiento Social**: Analisis de sentimiento en Twitter/X y Reddit por activo
-- **Verificacion de Fuentes**: Cruza precios de 2+ fuentes con puntuacion de concordancia
-- **Precision Historica**: Compara recomendaciones pasadas con resultados reales
-- **Asignacion de Portafolio**: % sugerido por sector segun tu perfil de riesgo
-- **Insights Inter-Sectoriales**: Correlaciones y divergencias que los agentes individuales no pueden ver
-- **Espanol/Ingles**: Soporte bilingue completo — interfaz Y datos del reporte se traducen al cambiar idioma
-- **Dashboard Interactivo**: Graficos, analisis sectorial expandible, top picks, alertas de riesgo
-- **Programacion**: Opcion de ejecutar diario o semanal con reportes automaticos
+| Función | Descripción |
+|---------|-------------|
+| **5 Agentes IA** | 4 investigadores sectoriales + 1 sintetizador de estrategia, todos en paralelo |
+| **Mi Portafolio** | Sección personal con tus activos del watchlist — precio en USD + moneda local, comprar/mantener/vender |
+| **3 Temas del Dashboard** | Dark Terminal, Dark Fintech, Light — se configura en el setup |
+| **Wizard de Setup** | `/portafolio-setup` configura perfil de riesgo, moneda local, watchlist, tema e idioma |
+| **Descubrimiento Dinámico** | Los agentes encuentran los activos más relevantes según condiciones actuales del mercado |
+| **Perfiles de Riesgo** | Conservador, moderado o agresivo — adapta recomendaciones, tamaños de posición y asignaciones |
+| **Sentimiento Social** | Análisis de sentimiento en Twitter/X y Reddit por activo |
+| **Verificación de Fuentes** | Cruza precios de 2+ fuentes con puntuación de concordancia |
+| **Precisión Histórica** | Compara recomendaciones pasadas con resultados reales |
+| **Insights Inter-Sectoriales** | Correlaciones y divergencias que los agentes individuales no pueden ver |
+| **Español/Inglés** | Soporte bilingüe completo — interfaz Y datos del reporte se traducen al cambiar idioma |
 
 ## Sectores Cubiertos
 
-| Sector | Siempre Incluye | Descubre Dinamicamente |
+| Sector | Siempre Incluye | Descubre Dinámicamente |
 |--------|----------------|----------------------|
-| Crypto | BTC, ETH | Altcoins en tendencia, tokens DeFi, tokens IA |
-| Acciones | S&P 500, NASDAQ | Mayores movimientos, acciones con catalizadores |
-| Forex | DXY, USD/MXN | Pares afectados por eventos actuales |
-| Materias Primas | Oro, Petroleo WTI | Agricolas, energia, metales segun condiciones |
+| Crypto | BTC, ETH + tu watchlist | Altcoins en tendencia, tokens DeFi, tokens IA |
+| Acciones | S&P 500, NASDAQ + tu watchlist | Mayores movimientos, acciones con catalizadores |
+| Forex | DXY + par de tu moneda local | Pares afectados por eventos macro actuales |
+| Materias Primas | Oro, Petróleo WTI + tu watchlist | Agrícolas, energía, metales según condiciones |
 
 ## Requisitos
 
 - [Claude Code](https://docs.anthropic.com/en/docs/claude-code) (CLI)
 - Node.js 18+ (para el dashboard)
-- Conexion a internet activa (los agentes investigan en vivo)
+- Conexión a internet activa (los agentes investigan en vivo)
 
-## Instalacion
+## Instalación
 
-### Opcion A: Una sola linea (la mas rapida)
-
-```bash
-curl -sL https://raw.githubusercontent.com/Hainrixz/maia-skill/main/install.sh | bash
-```
-
-Esto clona el repo, enlaza el skill a Claude Code e instala las dependencias del dashboard automaticamente.
-
-### Opcion B: Plugin de Claude Code
+### Opción A: Una sola línea (la más rápida)
 
 ```bash
-claude plugin install Hainrixz/maia-skill
+curl -sL https://raw.githubusercontent.com/DiggitalAccelerator/portafolio/main/install.sh | bash
 ```
 
-### Opcion C: Configuracion manual
+Esto clona el repo, enlaza el skill a Claude Code e instala las dependencias del dashboard automáticamente.
+
+### Opción B: Configuración manual
 
 ```bash
 # 1. Clonar el repo
-git clone https://github.com/Hainrixz/maia-skill.git
+git clone https://github.com/DiggitalAccelerator/portafolio.git ~/.claude/plugins/portafolio
 
 # 2. Enlazar el skill en Claude Code
 mkdir -p ~/.claude/skills
-ln -s "$(pwd)/maia-skill/.claude/skills/investment-analysis" ~/.claude/skills/investment-analysis
+ln -s ~/.claude/plugins/portafolio/.claude/skills/portafolio ~/.claude/skills/portafolio
 
 # 3. Instalar dependencias del dashboard
-npm install --prefix maia-skill/dashboard
+npm install --prefix ~/.claude/plugins/portafolio/dashboard
 ```
 
-El skill se activa automaticamente cuando mencionas temas de inversion en Claude Code.
+## Inicio Rápido
 
-## Uso
-
-En cualquier conversacion de Claude Code:
-
-- "Ejecuta un analisis de inversiones"
-- "Cuales son las mejores oportunidades de inversion hoy?"
-- "Analiza los mercados"
-- "Dame un reporte de mercado"
-- "Corre tododeia"
-
-Se te preguntara tu perfil de riesgo (conservador, moderado o agresivo), luego los 5 agentes se ponen a trabajar. El reporte se abre en `http://localhost:3420`.
-
-### Cambio de Idioma
-
-Cuando abras el dashboard por primera vez, se te pedira elegir ingles o espanol. Todo el contenido del reporte — resumenes, razonamientos, titulares, insights, advertencias — se traduce al idioma elegido. Los numeros, precios, tickers y porcentajes se mantienen igual.
-
-Puedes cambiar de idioma en cualquier momento desde la barra de herramientas.
-
-### Programacion (Opcional)
-
-Despues de tu primer reporte, puedes configurar analisis recurrentes:
-
+**Paso 1 — Configura tu perfil:**
 ```
-/loop 24h /investment-analysis    # Reportes diarios
-/loop 168h /investment-analysis   # Reportes semanales
+/portafolio-setup
 ```
+Configura tu perfil de riesgo, moneda local (COP, MXN, USD, etc.), watchlist personal, tema del dashboard e idioma.
 
-## Estructura del Proyecto
-
+**Paso 2 — Ejecuta tu análisis:**
 ```
-.claude/skills/investment-analysis/
-  SKILL.md              # Definicion del skill (instrucciones del orquestador)
-  assets/
-    template.html       # Reporte HTML de respaldo (sin Node.js)
-  references/
-    agent-prompts.md    # Prompts para los 5 agentes
-  dashboard/            # Dashboard interactivo en Next.js
-    src/
-      app/              # Paginas del App Router
-      components/       # Componentes del reporte
-      hooks/            # Hooks de idioma y datos
-      lib/              # Traducciones, constantes
-      types/            # Tipos de TypeScript
-    public/data/        # JSON del reporte generado (se crea en ejecucion)
+/portafolio
 ```
+O simplemente di: "analizar mercados", "reporte de portafolio", "market analysis"
 
-## Personalizacion
+El reporte se abre en `http://localhost:3420`.
 
-### Activos y Comportamiento de Agentes
+## Temas del Dashboard
 
-Edita `references/agent-prompts.md` para cambiar que activos investiga cada agente, como buscan, o que datos priorizan.
-
-### Perfiles de Riesgo
-
-El prompt del Agente de Estrategia en `references/agent-prompts.md` define como cada perfil de riesgo afecta la puntuacion y asignacion. Personaliza los multiplicadores y rangos de asignacion ahi.
-
-### Estilos del Dashboard
-
-El dashboard usa Tailwind CSS. Edita los componentes en `dashboard/src/components/report/` para cambiar la apariencia.
-
-### Traducciones
-
-Agrega o modifica traducciones de la interfaz en `dashboard/src/lib/translations.ts`. La traduccion de datos del reporte ocurre automaticamente a traves del agente de traduccion (Paso 8b en SKILL.md).
-
-## Caracteristicas del Dashboard
-
-- **Resumen ejecutivo** con evaluacion del entorno macro
-- **Asignacion de portafolio** con porcentajes recomendados
-- **Top picks ajustados por riesgo** con puntuaciones de confianza y tamano de posicion
-- **Insights inter-sectoriales** destacando correlaciones entre mercados
-- **Paneles sectoriales expandibles** con analisis detallado por activo
-- **Graficos**: desglose de asignacion, visualizacion de riesgo vs. confianza
-- **Precision historica** rastreando el rendimiento de recomendaciones pasadas
-- **Alertas de riesgo** cuando el agente de estrategia detecta preocupaciones
-- **Soporte bilingue completo** — ingles y espanol, incluyendo todos los datos
-
-## Modo de Respaldo
-
-Si Node.js no esta disponible, el skill genera un archivo `output/report.html` independiente usando la plantilla HTML en `assets/`. Se sirve a traves del servidor HTTP integrado de Python en el puerto 8420.
+| Tema | Estilo |
+|------|--------|
+| **Dark Terminal** | Fondo negro, texto verde monoespacio, efecto scanline |
+| **Dark Fintech** | Azul marino oscuro, acentos indigo/cyan, glassmorphism |
+| **Light** | Blanco limpio, acentos azules, sombras suaves |
 
 ## Aviso Legal
 
-Esta herramienta es **solo para fines informativos y educativos**. No constituye asesoramiento financiero, recomendaciones de inversion ni solicitud para comprar o vender valores, criptomonedas o materias primas. El analisis generado por IA puede contener errores y no debe utilizarse como base para decisiones de inversion. Siempre consulta a un asesor financiero calificado antes de tomar decisiones de inversion. El rendimiento pasado no es indicativo de resultados futuros. Tododeia y sus creadores no asumen responsabilidad por perdidas de inversion.
+Esta herramienta es **solo para fines informativos y educativos**. No constituye asesoramiento financiero, recomendaciones de inversión ni solicitud para comprar o vender valores, criptomonedas o materias primas. El análisis generado por IA puede contener errores y no debe utilizarse como base para decisiones de inversión. Siempre consulta a un asesor financiero calificado. El rendimiento pasado no es indicativo de resultados futuros.
 
 ## Licencia
 
 MIT — ver [LICENSE](LICENSE)
-
-## Contribuir
-
-Codigo abierto. PRs son bienvenidos!
