@@ -200,6 +200,10 @@ Add or modify UI translations in `dashboard/src/lib/translations.ts`.
 
 This tool is for **informational and educational purposes only**. It does not constitute financial advice, investment recommendations, or solicitation to buy or sell any securities, cryptocurrencies, or commodities. AI-generated analysis may contain errors and should not be relied upon for investment decisions. Always consult a qualified financial advisor. Past performance is not indicative of future results.
 
+## Credits
+
+This project is a fork of the original **Maia Skill** by [@soyenriquerocha](https://github.com/Hainrixz). The original concept, multi-agent architecture, and dashboard foundation were created by him. You can find the original project at [github.com/Hainrixz/maia-skill](https://github.com/Hainrixz/maia-skill).
+
 ---
 
 <a id="español"></a>
@@ -300,6 +304,10 @@ El reporte se abre en `http://localhost:3420`.
 ## Aviso Legal
 
 Esta herramienta es **solo para fines informativos y educativos**. No constituye asesoramiento financiero, recomendaciones de inversión ni solicitud para comprar o vender valores, criptomonedas o materias primas. El análisis generado por IA puede contener errores y no debe utilizarse como base para decisiones de inversión. Siempre consulta a un asesor financiero calificado. El rendimiento pasado no es indicativo de resultados futuros.
+
+## Créditos
+
+Este proyecto es un fork del **Maia Skill** original creado por [@soyenriquerocha](https://github.com/Hainrixz). El concepto original, la arquitectura multi-agente y la base del dashboard fueron creados por él. Puedes encontrar el proyecto original en [github.com/Hainrixz/maia-skill](https://github.com/Hainrixz/maia-skill).
 
 ## Licencia
 
