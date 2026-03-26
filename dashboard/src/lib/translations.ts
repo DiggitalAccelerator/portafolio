@@ -7,6 +7,9 @@ export const TRANSLATIONS: Record<Language, Record<string, string>> = {
     "header.report": "Investment Analysis Report",
     "header.profile": "profile",
 
+    // Market Pulse
+    "pulse.title": "Market Pulse",
+
     // Toolbar
     "toolbar.filter": "Filter",
     "toolbar.all": "All",
@@ -123,6 +126,9 @@ export const TRANSLATIONS: Record<Language, Record<string, string>> = {
   es: {
     // Header
     "header.subtitle": "Análisis de Mercados por",
+
+    // Market Pulse
+    "pulse.title": "Pulso del Mercado",
     "header.report": "Reporte de Análisis de Inversión",
     "header.profile": "perfil",
 

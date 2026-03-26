@@ -3,10 +3,9 @@
 import { useState, useCallback } from "react"
 import { useReportData } from "@/hooks/use-report-data"
 import { LanguageProvider, useLanguage } from "@/hooks/use-language"
-import { ThemeProvider } from "@/hooks/use-theme"
 import { LanguagePicker } from "@/components/report/LanguagePicker"
 import { ReportHeader } from "@/components/report/ReportHeader"
-import { ExecutiveSummary } from "@/components/report/ExecutiveSummary"
+import { MarketPulseCards } from "@/components/report/MarketPulseCards"
 import { MyPortfolio } from "@/components/report/MyPortfolio"
 import { MacroEnvironment } from "@/components/report/MacroEnvironment"
 import { PortfolioAllocation } from "@/components/report/PortfolioAllocation"
@@ -30,18 +29,13 @@ function ReportContent() {
     setOpenSectors((prev) =>
       prev.includes(sector) ? prev : [...prev, sector]
     )
-    setTimeout(() => {
-      document
-        .getElementById(`sector-${sector}`)
-        ?.scrollIntoView({ behavior: "smooth", block: "start" })
-    }, 100)
   }, [])
 
   if (loading) return <LoadingSkeleton />
 
   if (error || !data) {
     return (
-      <div className="relative flex min-h-screen items-center justify-center bg-[var(--background)]">
+      <div className="flex h-screen items-center justify-center bg-[var(--background)]">
         <div className="text-center">
           <h1 className="text-3xl font-semibold tracking-tight text-[var(--strong-text)]">
             portafolio.
@@ -55,23 +49,32 @@ function ReportContent() {
   }
 
   return (
-    <div className="relative min-h-screen bg-[var(--background)]">
+    <div className="flex h-screen flex-col overflow-hidden bg-[var(--background)]">
       <LanguagePicker />
-      <main id="main-content" className="mx-auto max-w-5xl px-4 pb-12 sm:px-6 lg:px-10">
-        <ReportHeader data={data} />
-        <div className="mt-6 space-y-8">
-          <ExecutiveSummary summary={data.executive_summary} />
-          {data.my_portfolio && <MyPortfolio data={data.my_portfolio} />}
-          <div className="grid gap-4 md:grid-cols-2">
-            <MacroEnvironment macro={data.macro_environment} />
-            <PortfolioAllocation allocation={data.portfolio_allocation} />
-          </div>
+
+      {/* Header — fijo arriba */}
+      <ReportHeader data={data} />
+
+      {/* MarketPulse strip */}
+      <MarketPulseCards data={data} />
+
+      {/* 3 columnas con scroll independiente */}
+      <div className="flex flex-1 overflow-hidden">
+
+        {/* Columna izquierda */}
+        <div className="w-1/3 overflow-y-auto border-r border-[var(--border)] p-4 space-y-4">
+          <MacroEnvironment macro={data.macro_environment} />
+          {data.warnings && data.warnings.length > 0 && (
+            <Warnings warnings={data.warnings} />
+          )}
+          <PortfolioAllocation allocation={data.portfolio_allocation} />
           <CrossSectorInsights insights={data.cross_sector_insights} />
-          <Warnings warnings={data.warnings} />
-          <TopPicksGrid
-            picks={data.risk_adjusted_picks}
-            sectors={data.sectors}
-          />
+          <Disclaimer />
+        </div>
+
+        {/* Columna central */}
+        <div className="w-1/3 overflow-y-auto border-r border-[var(--border)] p-4 space-y-4">
+          {data.my_portfolio && <MyPortfolio data={data.my_portfolio} />}
           <SectorOverview
             sectors={data.sectors}
             onSectorClick={handleSectorClick}
@@ -80,26 +83,34 @@ function ReportContent() {
             sectors={data.sectors}
             openSectors={openSectors}
           />
-          <HistoricalAccuracy accuracy={data.historical_accuracy} />
+        </div>
+
+        {/* Columna derecha */}
+        <div className="w-1/3 overflow-y-auto p-4 space-y-4">
+          <TopPicksGrid
+            picks={data.risk_adjusted_picks}
+            sectors={data.sectors}
+          />
           <ChartsSection
             sectors={data.sectors}
             picks={data.risk_adjusted_picks}
             allocation={data.portfolio_allocation}
           />
-          <Disclaimer />
+          <HistoricalAccuracy accuracy={data.historical_accuracy} />
         </div>
-        <Footer generatedAt={data.generated_at} />
-      </main>
+
+      </div>
+
+      {/* Footer bar — fijo abajo */}
+      <Footer generatedAt={data.generated_at} />
     </div>
   )
 }
 
 export default function ReportPage() {
   return (
-    <ThemeProvider>
-      <LanguageProvider>
-        <ReportContent />
-      </LanguageProvider>
-    </ThemeProvider>
+    <LanguageProvider>
+      <ReportContent />
+    </LanguageProvider>
   )
 }

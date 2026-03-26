@@ -3,7 +3,7 @@ name: portafolio-setup
 version: 1.0.0
 description: |
   Wizard de configuración inicial para el skill Portafolio. Configura perfil de riesgo,
-  moneda local, watchlist de activos personales, tema del dashboard e idioma.
+  moneda local, watchlist de activos personales e idioma.
   Ejecutar antes de usar /portafolio por primera vez.
   Trigger phrases: "configurar portafolio", "portafolio setup", "setup portafolio",
   "configurar mi portafolio", "primera vez", "inicializar portafolio".
@@ -26,7 +26,7 @@ Muestra este mensaje antes de hacer la primera pregunta:
 > **Bienvenido a Portafolio** 📊
 > by Cristhian White | Diggital Accelerator
 >
-> Voy a hacerte 7 preguntas rápidas para personalizar tu análisis de mercados.
+> Voy a hacerte 6 preguntas rápidas para personalizar tu análisis de mercados.
 > Esto solo toma 2 minutos.
 
 ### Paso 2 — Perfil de riesgo
@@ -85,19 +85,7 @@ Si elige opción 4: `crypto: []`
 
 Parsear igual que crypto. Si elige opción 4: `stocks: []`
 
-### Paso 6 — Tema del dashboard
-
-**Pregunta con AskUserQuestion:**
-- Question: "¿Qué tema visual quieres para tu dashboard?"
-- Header: "Tema"
-- Options:
-  1. Label: "Dark Terminal" | Description: "Fondo negro, texto verde monoespacio — estética Bloomberg/hacker"
-  2. Label: "Dark Fintech" | Description: "Fondo oscuro elegante, glassmorphism, gradientes sutiles — estilo Binance"
-  3. Label: "Light" | Description: "Fondo claro limpio, tipografía moderna — estilo fintech premium"
-
-Guardar como `theme`: "dark-terminal" | "dark-fintech" | "light"
-
-### Paso 7 — Idioma por defecto
+### Paso 6 — Idioma por defecto
 
 **Pregunta con AskUserQuestion:**
 - Question: "¿En qué idioma quieres el reporte?"
@@ -108,7 +96,7 @@ Guardar como `theme`: "dark-terminal" | "dark-fintech" | "light"
 
 Guardar como `language`: "es" | "en"
 
-### Paso 8 — Generar config
+### Paso 7 — Generar config
 
 Construir el objeto de configuración final con todos los valores recopilados:
 
@@ -122,8 +110,8 @@ Construir el objeto de configuración final con todos los valores recopilados:
     "forex": [],
     "commodities": []
   },
-  "theme": "<valor del paso 6>",
-  "language": "<valor del paso 7>",
+  "theme": "light",
+  "language": "<valor del paso 6>",
   "created_at": "<ISO timestamp actual>"
 }
 ```
@@ -132,7 +120,7 @@ Escribir este JSON a `config/user-config.json` en el directorio de instalación 
 
 Para encontrar el directorio de instalación, usar Glob para buscar `**/portafolio/.claude/skills/portafolio/setup.md` y tomar el directorio raíz (3 niveles arriba del archivo encontrado).
 
-### Paso 9 — Confirmar
+### Paso 8 — Confirmar
 
 Mostrar al usuario:
 
@@ -142,7 +130,6 @@ Mostrar al usuario:
 > - **Moneda local:** {local_currency}
 > - **Watchlist crypto:** {lista, o "solo BTC + ETH" si está vacío}
 > - **Watchlist acciones:** {lista, o "solo índices" si está vacío}
-> - **Tema:** {theme}
 > - **Idioma:** {language}
 >
 > Los pares forex y commodities del watchlist pueden agregarse directamente en `config/user-config.json` editando los arrays `forex` y `commodities`.

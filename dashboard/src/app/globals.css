@@ -37,9 +37,8 @@
   --radius-2xl: calc(var(--radius) * 1.8);
 }
 
-/* ── LIGHT THEME (default) ─────────────────────────────── */
-:root,
-[data-theme="light"] {
+/* ── LIGHT THEME ───────────────────────────────────────── */
+:root {
   --background: #fafafa;
   --foreground: #1f2937;
   --card: #ffffff;
@@ -73,76 +72,6 @@
   --strong-text: #111827;
 }
 
-/* ── DARK FINTECH THEME ────────────────────────────────── */
-[data-theme="dark-fintech"] {
-  --background: #0f0f23;
-  --foreground: #e2e8f0;
-  --card: rgba(255, 255, 255, 0.05);
-  --card-foreground: #e2e8f0;
-  --popover: #1a1a35;
-  --popover-foreground: #e2e8f0;
-  --primary: #6366f1;
-  --primary-foreground: #ffffff;
-  --secondary: #1a1a35;
-  --secondary-foreground: #e2e8f0;
-  --muted: #1e1e3a;
-  --muted-foreground: #94a3b8;
-  --accent: rgba(99, 102, 241, 0.15);
-  --accent-foreground: #818cf8;
-  --destructive: #f43f5e;
-  --border: rgba(255, 255, 255, 0.1);
-  --input: rgba(255, 255, 255, 0.08);
-  --ring: #6366f1;
-  --chart-1: #f7931a;
-  --chart-2: #10b981;
-  --chart-3: #6366f1;
-  --chart-4: #f59e0b;
-  --chart-5: #f43f5e;
-  --radius: 0.75rem;
-  /* Custom portafolio tokens */
-  --brand-accent: #6366f1;
-  --brand-accent-2: #22d3ee;
-  --header-border: rgba(255, 255, 255, 0.08);
-  --section-bg: rgba(255, 255, 255, 0.03);
-  --muted-text: #94a3b8;
-  --strong-text: #f1f5f9;
-}
-
-/* ── DARK TERMINAL THEME ───────────────────────────────── */
-[data-theme="dark-terminal"] {
-  --background: #0a0a0a;
-  --foreground: #00ff41;
-  --card: #0d0d0d;
-  --card-foreground: #00ff41;
-  --popover: #111111;
-  --popover-foreground: #00ff41;
-  --primary: #00ff41;
-  --primary-foreground: #0a0a0a;
-  --secondary: #111111;
-  --secondary-foreground: #00cc33;
-  --muted: #0f0f0f;
-  --muted-foreground: #338833;
-  --accent: rgba(0, 255, 65, 0.08);
-  --accent-foreground: #00ff41;
-  --destructive: #ff4444;
-  --border: #1a3a1a;
-  --input: #1a2a1a;
-  --ring: #00ff41;
-  --chart-1: #f7931a;
-  --chart-2: #00ff41;
-  --chart-3: #00ccff;
-  --chart-4: #ffcc00;
-  --chart-5: #ff4444;
-  --radius: 0.25rem;
-  /* Custom portafolio tokens */
-  --brand-accent: #00ff41;
-  --brand-accent-2: #00ccff;
-  --header-border: #1a3a1a;
-  --section-bg: #0d0d0d;
-  --muted-text: #338833;
-  --strong-text: #00ff41;
-}
-
 /* ── BASE STYLES ───────────────────────────────────────── */
 @layer base {
   * {
@@ -153,39 +82,6 @@
     min-height: 100vh;
     transition: background-color 0.2s ease, color 0.2s ease;
   }
-}
-
-/* ── DARK FINTECH — glassmorphism cards ────────────────── */
-[data-theme="dark-fintech"] .rounded-xl {
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
-}
-
-/* ── DARK TERMINAL — scanlines & glow ─────────────────── */
-[data-theme="dark-terminal"] body::before {
-  content: "";
-  position: fixed;
-  inset: 0;
-  background: repeating-linear-gradient(
-    0deg,
-    transparent,
-    transparent 2px,
-    rgba(0, 255, 65, 0.015) 2px,
-    rgba(0, 255, 65, 0.015) 4px
-  );
-  pointer-events: none;
-  z-index: 9999;
-}
-
-[data-theme="dark-terminal"] .rounded-xl {
-  border-radius: 0.25rem;
-  box-shadow: 0 0 8px rgba(0, 255, 65, 0.05);
-}
-
-[data-theme="dark-terminal"] h1,
-[data-theme="dark-terminal"] h2 {
-  font-family: var(--font-mono);
-  text-shadow: 0 0 10px rgba(0, 255, 65, 0.4);
 }
 
 /* ── PRINT ─────────────────────────────────────────────── */

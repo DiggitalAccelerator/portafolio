@@ -11,8 +11,9 @@ const profileStyles: Record<string, string> = {
 }
 
 export function ReportHeader({ data }: { data: ReportData }) {
-  const { t } = useLanguage()
-  const date = new Date(data.generated_at).toLocaleDateString("en-US", {
+  const { t, lang } = useLanguage()
+  const locale = lang === "es" ? "es-ES" : "en-US"
+  const date = new Date(data.generated_at).toLocaleDateString(locale, {
     weekday: "long",
     year: "numeric",
     month: "long",
@@ -24,11 +25,11 @@ export function ReportHeader({ data }: { data: ReportData }) {
       initial={{ opacity: 0, y: -10 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.4 }}
-      className="border-b border-[var(--header-border)] pb-6 pt-8"
+      className="border-b border-[var(--header-border)] px-4 py-3"
     >
-      <div className="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
+      <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-4xl font-semibold tracking-tight text-[var(--strong-text)] sm:text-5xl">
+          <h1 className="text-2xl font-semibold tracking-tight text-[var(--strong-text)]">
             portafolio.
           </h1>
           <p className="mt-1 text-sm text-[var(--muted-text)]">

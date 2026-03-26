@@ -11,7 +11,7 @@ export function Footer({ generatedAt }: { generatedAt: string }) {
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       transition={{ delay: 0.8 }}
-      className="flex flex-wrap items-center justify-between gap-2 border-t border-[var(--header-border)] pb-10 pt-5 text-xs text-[var(--muted-text)]"
+      className="flex flex-wrap items-center justify-between gap-2 border-t border-[var(--header-border)] px-4 py-2 text-xs text-[var(--muted-text)]"
     >
       <div>
         portafolio. by{" "}
