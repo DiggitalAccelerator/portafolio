@@ -71,12 +71,14 @@ export function MarketPulseCards({ data }: { data: ReportData }) {
     (a) => a.symbol === "IXIC" || a.symbol === "^IXIC" || a.name?.includes("NASDAQ") || a.name?.includes("Nasdaq")
   )
   const localCurrency = data.local_currency
-  const usdLocal = data.sectors?.currencies?.assets?.find(
-    (a) =>
-      (localCurrency && a.symbol === `USD/${localCurrency}`) ||
-      (localCurrency && a.symbol?.includes(localCurrency)) ||
-      a.symbol === "DXY"
-  )
+  const usdLocal = localCurrency
+    ? data.sectors?.currencies?.assets?.find(
+        (a) =>
+          a.symbol === `USD/${localCurrency}` ||
+          a.symbol === `${localCurrency}/USD` ||
+          a.symbol?.includes(localCurrency)
+      )
+    : data.sectors?.currencies?.assets?.find((a) => a.symbol === "DXY")
 
   const cards = [
     { label: "Bitcoin", asset: btc },

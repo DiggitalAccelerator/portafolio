@@ -754,6 +754,39 @@
       "timestamp": "2026-03-13T18:30:00Z",
       "assets": [
         {
+          "name": "Dólar / Peso Colombiano",
+          "symbol": "USD/COP",
+          "current_price": "4,198.50",
+          "change_24h": "+0.38%",
+          "change_7d": "+1.15%",
+          "change_30d": "-2.10%",
+          "ytd_change": "-3.80%",
+          "week_52_high": "4,420.00",
+          "week_52_low": "3,850.00",
+          "market_cap": "N/A",
+          "volume_24h": "N/A",
+          "sentiment": "neutral",
+          "social_sentiment": "neutral",
+          "social_buzz": "low",
+          "confidence": 7,
+          "source_agreement": "high",
+          "sources_checked": [
+            "banrep.gov.co",
+            "investing.com",
+            "xe.com"
+          ],
+          "key_news": [
+            "Banco de la República mantiene tasa en 9.75%",
+            "Exportaciones petroleras sostienen el peso"
+          ],
+          "social_highlights": [
+            "TRM estable en zona de 4.200",
+            "Analistas ven rango 4.100-4.300 para el trimestre"
+          ],
+          "recommendation": "hold",
+          "reasoning": "El peso colombiano se mantiene estable apoyado en altos precios del petróleo y política monetaria restrictiva del Banrep."
+        },
+        {
           "name": "US Dollar Index",
           "symbol": "DXY",
           "current_price": 100.3,
