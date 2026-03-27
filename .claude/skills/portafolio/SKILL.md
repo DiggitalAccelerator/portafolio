@@ -35,7 +35,6 @@ Si existe, leerlo y extraer:
 - `risk_profile` → "conservative" | "moderate" | "aggressive"
 - `local_currency` → código de moneda (ej: "COP")
 - `watchlist` → objeto con crypto, stocks, forex, commodities arrays
-- `theme` → "light" | "dark-fintech" | "dark-terminal"
 - `language` → "en" | "es"
 
 ### Paso 2 — Cargar prompts de agentes
@@ -173,12 +172,9 @@ Combinar todos los outputs en el objeto final:
 3. Crear el directorio `output/` si no existe.
 4. Escribir el resultado a `output/report.html`.
 
-### Paso 9 — Publicar reporte via git
+### Paso 9 — Mostrar resultado
 
-1. Hacer `git add output/report.html output/history/` desde el directorio de instalación.
-2. Hacer commit: `git commit -m "📊 Portafolio [YYYY-MM-DD]"` (usar la fecha de hoy).
-3. Hacer `git push`.
-4. Mostrar al usuario:
+Mostrar al usuario:
 
 > **✅ Reporte de Portafolio listo!**
 >
@@ -193,7 +189,7 @@ Combinar todos los outputs en el objeto final:
 - Si `WebSearch` no devuelve resultados para un activo, intentar `WebFetch` en Yahoo Finance, CoinGecko, o Google Finance.
 - Si un agente devuelve JSON malformado, re-promptear una vez con instrucciones de corrección. Si sigue fallando, marcar ese sector como `"data_unavailable": true`.
 - Si el Agente Estratega falla, hacer ranking simple por confidence score y anotar "Strategy analysis unavailable" en el reporte.
-- Si `git push` falla, indicar al usuario que abra `output/report.html` directamente desde su máquina local (el archivo ya fue escrito y no requiere servidor).
+- Si `templates/report.html` no existe, indicar al usuario que reinstale el skill (el template pudo haberse eliminado accidentalmente).
 - Si no hay internet, generar reporte con mensajes "Sin datos disponibles" por sector.
 
 ## Notas Importantes
