@@ -1,0 +1,786 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Portafolio — Market Analysis</title>
+  <script>
+    window.REPORT_DATA = null;
+    window.USER_CONFIG = { language: "es", theme: "light" };
+  </script>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg: #fafafa;
+      --fg: #1f2937;
+      --secondary: #ffffff;
+      --border: #e5e7eb;
+      --accent: #2563eb;
+      --muted: #6b7280;
+      --strong: #1f2937;
+      --section-bg: #ffffff;
+    }
+
+    body {
+      background: var(--bg);
+      color: var(--fg);
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      height: 100vh;
+      overflow: hidden;
+    }
+
+    #app { display: flex; flex-direction: column; height: 100vh; overflow: hidden; }
+
+    /* Header */
+    .report-header { border-bottom: 1px solid var(--border); padding: 0.625rem 1rem; flex-shrink: 0; }
+    .header-inner { display: flex; align-items: center; justify-content: space-between; }
+    .header-brand h1 { font-size: 1.375rem; font-weight: 600; letter-spacing: -0.02em; color: var(--strong); }
+    .header-sub { font-size: 0.8125rem; color: var(--muted); margin-top: 0.125rem; }
+    .header-sub strong { color: var(--strong); }
+    .header-right { text-align: right; }
+    .header-date { font-size: 0.8125rem; color: var(--muted); }
+    .header-date strong { display: block; font-size: 0.9375rem; font-weight: 600; color: var(--strong); }
+    .badge {
+      display: inline-block; border-radius: 9999px; padding: 0.2rem 0.625rem;
+      font-size: 0.6875rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em;
+      border: 1px solid; margin-top: 0.375rem; margin-left: 0.25rem;
+    }
+    .badge-conservative { background: #eff6ff; color: #1d4ed8; border-color: #bfdbfe; }
+    .badge-moderate { background: #fffbeb; color: #b45309; border-color: #fde68a; }
+    .badge-aggressive { background: #fef2f2; color: #b91c1c; border-color: #fecaca; }
+    .badge-currency { background: var(--secondary); color: var(--muted); border-color: var(--border); }
+
+    /* Language Picker */
+    .lang-picker { position: fixed; top: 0.625rem; right: 1rem; z-index: 100; display: flex; gap: 0.25rem; }
+    .lang-btn {
+      background: var(--section-bg); border: 1px solid var(--border); border-radius: 0.375rem;
+      padding: 0.2rem 0.5rem; font-size: 0.6875rem; font-weight: 500; cursor: pointer; color: var(--muted);
+    }
+    .lang-btn.active { background: var(--accent); color: white; border-color: var(--accent); }
+    .lang-btn:hover:not(.active) { border-color: var(--accent); color: var(--accent); }
+
+    /* MarketPulse */
+    .pulse-strip { border-bottom: 1px solid var(--border); padding: 0.5rem 1rem; flex-shrink: 0; }
+    .pulse-label { font-size: 0.5625rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.1em; color: var(--muted); margin-bottom: 0.375rem; }
+    .pulse-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 0.625rem; }
+    .pulse-card {
+      background: var(--section-bg); border: 1px solid var(--border); border-radius: 0.5rem;
+      padding: 0.625rem; display: flex; flex-direction: column; gap: 0.2rem;
+    }
+    .pulse-card-header { display: flex; align-items: flex-start; justify-content: space-between; }
+    .pulse-sym { font-size: 0.5625rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.1em; color: var(--muted); }
+    .pulse-name { font-size: 0.6875rem; color: var(--muted); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; max-width: 100px; }
+    .pulse-price { font-size: 1rem; font-weight: 600; color: var(--strong); line-height: 1.1; }
+    .pulse-changes { display: flex; gap: 0.625rem; font-size: 0.6875rem; margin-top: 0.125rem; }
+    .up { color: #059669; font-weight: 500; }
+    .down { color: #ef4444; font-weight: 500; }
+    .dim { color: var(--muted); }
+    .sdot { width: 0.4375rem; height: 0.4375rem; border-radius: 50%; flex-shrink: 0; margin-top: 3px; }
+    .sdot-bull { background: #10b981; }
+    .sdot-bear { background: #ef4444; }
+    .sdot-neu { background: #f59e0b; }
+    .pulse-empty { font-size: 0.8125rem; color: var(--muted); padding: 0.5rem 0; }
+
+    /* Main layout */
+    .main-content { display: flex; flex: 1; overflow: hidden; }
+    .col { overflow-y: auto; padding: 0.875rem; display: flex; flex-direction: column; gap: 0.75rem; }
+    .col-left { width: 33.333%; border-right: 1px solid var(--border); }
+    .col-center { width: 33.333%; border-right: 1px solid var(--border); }
+    .col-right { width: 33.333%; }
+
+    /* Section card */
+    .card { background: var(--section-bg); border: 1px solid var(--border); border-radius: 0.625rem; padding: 0.875rem; }
+    .card-title { font-size: 0.625rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.08em; color: var(--muted); margin-bottom: 0.625rem; }
+
+    /* Macro */
+    .macro-summary { font-size: 0.8125rem; color: var(--fg); line-height: 1.55; margin-bottom: 0.625rem; }
+    .macro-badges { display: flex; gap: 0.375rem; flex-wrap: wrap; margin-bottom: 0.625rem; }
+    .mbadge { font-size: 0.625rem; padding: 0.15rem 0.5rem; border-radius: 9999px; font-weight: 500; border: 1px solid; }
+    .mbadge-green { background: #ecfdf5; color: #065f46; border-color: #6ee7b7; }
+    .mbadge-red { background: #fef2f2; color: #991b1b; border-color: #fca5a5; }
+    .mbadge-amber { background: #fffbeb; color: #92400e; border-color: #fcd34d; }
+    .mbadge-blue { background: #eff6ff; color: #1e40af; border-color: #93c5fd; }
+    .factor-list { list-style: none; display: flex; flex-direction: column; gap: 0.3rem; }
+    .factor-item { font-size: 0.6875rem; color: var(--muted); padding-left: 0.625rem; border-left: 2px solid var(--accent); line-height: 1.45; }
+
+    /* Warnings */
+    .warn-item {
+      background: #fffbeb; border: 1px solid #fcd34d; border-radius: 0.375rem; padding: 0.5rem 0.625rem;
+      font-size: 0.6875rem; color: #78350f; line-height: 1.5; display: flex; gap: 0.375rem; align-items: flex-start;
+    }
+    .warn-icon { flex-shrink: 0; }
+
+    /* Allocation */
+    .alloc-chart-wrap { width: 140px; height: 140px; margin: 0 auto 0.625rem; position: relative; }
+    .alloc-legend { display: flex; flex-direction: column; gap: 0.3rem; }
+    .alloc-row { display: flex; justify-content: space-between; align-items: center; font-size: 0.6875rem; }
+    .alloc-dot-lbl { display: flex; align-items: center; gap: 0.375rem; color: var(--muted); }
+    .adot { width: 0.5rem; height: 0.5rem; border-radius: 50%; flex-shrink: 0; }
+    .alloc-pct { font-weight: 600; color: var(--strong); }
+
+    /* Insights */
+    .insight-item { border-left: 2px solid var(--accent); padding-left: 0.625rem; }
+    .insight-text { font-size: 0.75rem; color: var(--fg); font-weight: 500; line-height: 1.4; margin-bottom: 0.2rem; }
+    .insight-impl-label { font-size: 0.5625rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; color: var(--accent); }
+    .insight-impl { font-size: 0.6875rem; color: var(--muted); line-height: 1.4; }
+
+    /* Disclaimer */
+    .disclaimer-card { border: 1px solid var(--border); border-radius: 0.5rem; padding: 0.5rem 0.625rem; font-size: 0.625rem; color: var(--muted); line-height: 1.5; }
+
+    /* My Portfolio */
+    .portfolio-summary-text { font-size: 0.75rem; color: var(--fg); line-height: 1.5; margin-bottom: 0.5rem; }
+    .portfolio-meta { display: flex; gap: 0.375rem; flex-wrap: wrap; margin-bottom: 0.5rem; }
+    .portfolio-rebalance { background: #eff6ff; border: 1px solid #bfdbfe; border-radius: 0.375rem; padding: 0.375rem 0.625rem; font-size: 0.6875rem; color: #1e40af; margin-bottom: 0.5rem; }
+    .p-asset-row { display: flex; align-items: center; padding: 0.4rem 0; border-bottom: 1px solid var(--border); font-size: 0.6875rem; }
+    .p-asset-row:last-child { border-bottom: none; }
+    .p-sym { font-weight: 700; color: var(--strong); width: 3rem; flex-shrink: 0; }
+    .p-name { color: var(--muted); flex: 1; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+    .p-price { text-align: right; flex-shrink: 0; }
+    .p-price-main { font-weight: 600; color: var(--strong); font-size: 0.75rem; }
+    .p-price-local { color: var(--muted); font-size: 0.625rem; }
+
+    /* Sector overview */
+    .sector-item { border: 1px solid var(--border); border-radius: 0.5rem; overflow: hidden; }
+    .sector-hdr {
+      padding: 0.625rem 0.75rem; cursor: pointer; display: flex; align-items: center; justify-content: space-between;
+      background: var(--bg); user-select: none;
+    }
+    .sector-hdr:hover { background: #f3f4f6; }
+    .sector-hdr-left { display: flex; align-items: center; gap: 0.5rem; }
+    .sector-hdr-name { font-weight: 600; font-size: 0.8125rem; color: var(--strong); }
+    .sector-body { padding: 0.625rem 0.75rem; border-top: 1px solid var(--border); }
+    .sector-sum { font-size: 0.6875rem; color: var(--muted); line-height: 1.45; margin-bottom: 0.375rem; }
+    .sector-top { font-size: 0.6875rem; color: var(--muted); }
+    .sector-top span { font-weight: 600; color: var(--accent); }
+    .chevron { font-size: 0.625rem; color: var(--muted); transition: transform 0.2s; }
+    .chevron.open { transform: rotate(180deg); }
+
+    /* Asset mini */
+    .asset-mini { display: flex; align-items: center; gap: 0.375rem; padding: 0.35rem 0; border-bottom: 1px solid var(--border); }
+    .asset-mini:last-child { border-bottom: none; }
+    .am-sym { font-weight: 700; color: var(--strong); font-size: 0.6875rem; width: 3.25rem; flex-shrink: 0; }
+    .am-name { color: var(--muted); font-size: 0.625rem; flex: 1; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+    .am-price { font-size: 0.6875rem; font-weight: 500; color: var(--strong); text-align: right; flex-shrink: 0; }
+    .am-changes { display: flex; flex-direction: column; align-items: flex-end; flex-shrink: 0; font-size: 0.5625rem; }
+    .am-rec { flex-shrink: 0; margin-left: 0.25rem; }
+
+    /* Recommendation badge */
+    .rec {
+      display: inline-flex; border-radius: 0.2rem; padding: 0.1rem 0.3rem;
+      font-size: 0.5625rem; font-weight: 700; letter-spacing: 0.04em;
+    }
+    .rec-buy { background: #ecfdf5; color: #065f46; }
+    .rec-sell { background: #fef2f2; color: #991b1b; }
+    .rec-hold { background: #fffbeb; color: #92400e; }
+
+    /* Outlook badge */
+    .outlook {
+      display: inline-block; padding: 0.1rem 0.4rem; border-radius: 9999px;
+      font-size: 0.5625rem; font-weight: 600; border: 1px solid;
+    }
+    .outlook-bull { background: #ecfdf5; color: #065f46; border-color: #6ee7b7; }
+    .outlook-bear { background: #fef2f2; color: #991b1b; border-color: #fca5a5; }
+    .outlook-neu { background: #fffbeb; color: #92400e; border-color: #fcd34d; }
+
+    /* Top Picks */
+    .pick-card { border: 1px solid var(--border); border-radius: 0.5rem; padding: 0.625rem 0.75rem; }
+    .pick-hdr { display: flex; align-items: flex-start; justify-content: space-between; margin-bottom: 0.3rem; }
+    .pick-name-wrap { flex: 1; }
+    .pick-rank { font-size: 0.5625rem; color: var(--muted); font-weight: 500; text-transform: uppercase; letter-spacing: 0.05em; }
+    .pick-name { font-weight: 700; color: var(--strong); font-size: 0.8125rem; line-height: 1.2; }
+    .pick-symbol { font-size: 0.6875rem; color: var(--muted); }
+    .pick-meta { display: flex; gap: 0.375rem; align-items: center; flex-wrap: wrap; margin-bottom: 0.3rem; }
+    .pick-conf { font-size: 0.625rem; color: var(--muted); }
+    .pick-reasoning { font-size: 0.6rem; color: var(--muted); line-height: 1.4; }
+    .pick-position { font-size: 0.625rem; color: var(--accent); font-weight: 500; margin-top: 0.2rem; }
+    .conf-bar-wrap { display: flex; align-items: center; gap: 0.375rem; margin-bottom: 0.3rem; }
+    .conf-bar { background: var(--border); border-radius: 9999px; height: 3px; flex: 1; }
+    .conf-fill { background: var(--accent); height: 100%; border-radius: 9999px; }
+    .conf-label { font-size: 0.5625rem; color: var(--muted); white-space: nowrap; }
+
+    /* Accuracy */
+    .accuracy-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 0.5rem; margin-bottom: 0.625rem; text-align: center; }
+    .acc-val { font-size: 1.375rem; font-weight: 700; color: var(--strong); line-height: 1; }
+    .acc-label { font-size: 0.5625rem; color: var(--muted); text-transform: uppercase; letter-spacing: 0.05em; margin-top: 0.125rem; }
+    .acc-notable { font-size: 0.6875rem; color: var(--muted); line-height: 1.45; border-top: 1px solid var(--border); padding-top: 0.5rem; }
+
+    /* Footer */
+    .report-footer {
+      border-top: 1px solid var(--border); padding: 0.375rem 1rem;
+      display: flex; align-items: center; justify-content: space-between;
+      font-size: 0.6875rem; color: var(--muted); flex-shrink: 0;
+    }
+
+    /* Error / loading */
+    .no-data { display: flex; height: 100vh; align-items: center; justify-content: center; flex-direction: column; gap: 0.75rem; }
+    .no-data h1 { font-size: 2rem; font-weight: 600; color: var(--strong); }
+    .no-data p { font-size: 0.875rem; color: var(--muted); }
+
+    /* Scrollbar */
+    ::-webkit-scrollbar { width: 4px; }
+    ::-webkit-scrollbar-track { background: transparent; }
+    ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 9999px; }
+    ::-webkit-scrollbar-thumb:hover { background: var(--muted); }
+
+    /* Spacing util */
+    .mt-s { margin-top: 0.5rem; }
+    .gap-s { display: flex; flex-direction: column; gap: 0.375rem; }
+  </style>
+</head>
+<body>
+<div id="app"></div>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.3/dist/chart.umd.min.js"></script>
+<script>
+// ─── Translations ────────────────────────────────────────────────────────────
+const T = {
+  en: {
+    'pulse.title': 'Market Pulse',
+    'header.by': 'Market analysis by',
+    'header.brand': 'Diggital Accelerator',
+    'header.report': 'Market Analysis Report',
+    'header.profile': 'Profile',
+    'macro.title': 'Macro Environment',
+    'macro.factors': 'Key Factors',
+    'warnings.title': 'Warnings',
+    'alloc.title': 'Portfolio Allocation',
+    'insights.title': 'Cross-Sector Insights',
+    'insights.impl': 'Implication',
+    'disclaimer.text': 'This report is for informational purposes only and does not constitute financial advice. Always conduct your own research and consult a licensed financial advisor before making investment decisions.',
+    'portfolio.title': 'My Portfolio',
+    'portfolio.risk': 'Risk',
+    'portfolio.rebalance': 'Rebalance suggestion',
+    'sectors.title': 'Sector Overview',
+    'sectors.outlook': 'Outlook',
+    'sectors.top': 'Top Pick',
+    'sectors.assets': 'Assets',
+    'picks.title': 'Risk-Adjusted Top Picks',
+    'picks.confidence': 'Confidence',
+    'picks.position': 'Position',
+    'accuracy.title': 'Historical Accuracy',
+    'accuracy.calls': 'Calls',
+    'accuracy.correct': 'Correct',
+    'accuracy.accuracy': 'Accuracy',
+    'accuracy.notable': 'Notable',
+    'footer.tagline': 'AI-powered market intelligence',
+    'footer.generated': 'Generated',
+    'rec.buy': 'BUY', 'rec.hold': 'HOLD', 'rec.sell': 'SELL',
+    'sectors.crypto': 'Crypto', 'sectors.stocks': 'Stocks',
+    'sectors.currencies': 'Forex', 'sectors.materials': 'Materials',
+    'rate.falling': 'Rates: Falling', 'rate.rising': 'Rates: Rising', 'rate.stable': 'Rates: Stable',
+    'inf.falling': 'Inflation: Falling', 'inf.rising': 'Inflation: Rising', 'inf.stable': 'Inflation: Stable',
+    'geo.high': 'Geo Risk: High', 'geo.medium': 'Geo Risk: Medium', 'geo.low': 'Geo Risk: Low',
+    'alloc.cash': 'Cash',
+  },
+  es: {
+    'pulse.title': 'Pulso del Mercado',
+    'header.by': 'Análisis de mercado por',
+    'header.brand': 'Diggital Accelerator',
+    'header.report': 'Reporte de Análisis de Mercado',
+    'header.profile': 'Perfil',
+    'macro.title': 'Entorno Macroeconómico',
+    'macro.factors': 'Factores Clave',
+    'warnings.title': 'Advertencias',
+    'alloc.title': 'Asignación del Portafolio',
+    'insights.title': 'Perspectivas Transversales',
+    'insights.impl': 'Implicación',
+    'disclaimer.text': 'Este reporte es solo para fines informativos y no constituye asesoramiento financiero. Realiza tu propia investigación y consulta con un asesor financiero certificado antes de tomar decisiones de inversión.',
+    'portfolio.title': 'Mi Portafolio',
+    'portfolio.risk': 'Riesgo',
+    'portfolio.rebalance': 'Sugerencia de rebalanceo',
+    'sectors.title': 'Vista General de Sectores',
+    'sectors.outlook': 'Perspectiva',
+    'sectors.top': 'Top Pick',
+    'sectors.assets': 'Activos',
+    'picks.title': 'Mejores Picks Ajustados al Riesgo',
+    'picks.confidence': 'Confianza',
+    'picks.position': 'Posición',
+    'accuracy.title': 'Precisión Histórica',
+    'accuracy.calls': 'Llamadas',
+    'accuracy.correct': 'Correctas',
+    'accuracy.accuracy': 'Precisión',
+    'accuracy.notable': 'Notable',
+    'footer.tagline': 'Inteligencia de mercado con IA',
+    'footer.generated': 'Generado',
+    'rec.buy': 'COMPRAR', 'rec.hold': 'MANTENER', 'rec.sell': 'VENDER',
+    'sectors.crypto': 'Cripto', 'sectors.stocks': 'Acciones',
+    'sectors.currencies': 'Forex', 'sectors.materials': 'Materias Primas',
+    'rate.falling': 'Tasas: Bajando', 'rate.rising': 'Tasas: Subiendo', 'rate.stable': 'Tasas: Estables',
+    'inf.falling': 'Inflación: Cayendo', 'inf.rising': 'Inflación: Subiendo', 'inf.stable': 'Inflación: Estable',
+    'geo.high': 'Riesgo Geo: Alto', 'geo.medium': 'Riesgo Geo: Medio', 'geo.low': 'Riesgo Geo: Bajo',
+    'alloc.cash': 'Efectivo',
+  }
+};
+
+let currentLang = (window.USER_CONFIG || {}).language || 'es';
+function t(key) { return (T[currentLang] || T.en)[key] || key; }
+
+// ─── Helpers ─────────────────────────────────────────────────────────────────
+function parseChange(val) {
+  if (val === undefined || val === null) return 0;
+  return parseFloat(String(val).replace(/[^0-9.\-+]/g, '')) || 0;
+}
+
+function fmtPrice(val) {
+  if (val === undefined || val === null) return '—';
+  if (typeof val === 'string') return val;
+  if (typeof val === 'number') {
+    if (val >= 1000) return new Intl.NumberFormat('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }).format(val);
+    if (val >= 1) return val.toFixed(2);
+    return val.toFixed(4);
+  }
+  return String(val);
+}
+
+function fmtChange(val) {
+  const n = parseChange(val);
+  const isUp = n >= 0;
+  const sign = isUp ? '▲' : '▼';
+  return `<span class="${isUp ? 'up' : 'down'}">${sign} ${Math.abs(n).toFixed(2)}%</span>`;
+}
+
+function fmtChange7(val) {
+  const n = parseChange(val);
+  const isUp = n >= 0;
+  return `<span class="${isUp ? 'up dim' : 'down dim'}">${isUp ? '+' : ''}${n.toFixed(2)}% 7d</span>`;
+}
+
+function recBadge(rec) {
+  if (!rec) return '';
+  const r = rec.toLowerCase();
+  const cls = r === 'buy' ? 'rec-buy' : r === 'sell' ? 'rec-sell' : 'rec-hold';
+  const label = r === 'buy' ? t('rec.buy') : r === 'sell' ? t('rec.sell') : t('rec.hold');
+  return `<span class="rec ${cls}">${label}</span>`;
+}
+
+function sentimentDot(sentiment) {
+  if (!sentiment) return `<span class="sdot sdot-neu"></span>`;
+  const s = sentiment.toLowerCase();
+  if (s.includes('bull') || s === 'positive') return `<span class="sdot sdot-bull" title="${sentiment}"></span>`;
+  if (s.includes('bear') || s === 'negative') return `<span class="sdot sdot-bear" title="${sentiment}"></span>`;
+  return `<span class="sdot sdot-neu" title="${sentiment}"></span>`;
+}
+
+function outlookBadge(outlook) {
+  if (!outlook) return '';
+  const o = outlook.toLowerCase();
+  const cls = (o.includes('bull') || o === 'positive') ? 'outlook-bull' : (o.includes('bear') || o === 'negative') ? 'outlook-bear' : 'outlook-neu';
+  return `<span class="outlook ${cls}">${outlook}</span>`;
+}
+
+function profileBadge(profile) {
+  const cls = profile === 'conservative' ? 'badge-conservative' : profile === 'aggressive' ? 'badge-aggressive' : 'badge-moderate';
+  return `<span class="badge ${cls}">${profile} ${t('header.profile')}</span>`;
+}
+
+function macroBadge(label, colorClass) {
+  return `<span class="mbadge mbadge-${colorClass}">${label}</span>`;
+}
+
+function rateColor(v) { return v === 'falling' ? 'green' : v === 'rising' ? 'red' : 'amber'; }
+function infColor(v) { return v === 'rising' ? 'red' : v === 'falling' ? 'green' : 'amber'; }
+function geoColor(v) { return v === 'high' ? 'red' : v === 'low' ? 'green' : 'amber'; }
+
+// ─── Pulse ───────────────────────────────────────────────────────────────────
+function findPulseAssets(data) {
+  const c = data.sectors;
+  const btc = c?.crypto?.assets?.find(a => a.symbol === 'BTC');
+  const sp500 = c?.stocks?.assets?.find(a => a.symbol === 'SPX' || a.symbol === '^GSPC' || a.name?.includes('S&P'));
+  const nasdaq = c?.stocks?.assets?.find(a => a.symbol === 'IXIC' || a.symbol === '^IXIC' || a.name?.includes('NASDAQ') || a.name?.includes('Nasdaq'));
+  const lc = data.local_currency;
+  const usdLocal = lc
+    ? c?.currencies?.assets?.find(a => a.symbol === `USD/${lc}` || a.symbol === `${lc}/USD` || a.symbol?.includes(lc))
+    : c?.currencies?.assets?.find(a => a.symbol === 'DXY');
+  return [
+    { label: 'Bitcoin', asset: btc },
+    { label: 'S&P 500', asset: sp500 },
+    { label: 'NASDAQ', asset: nasdaq },
+    { label: lc ? `USD / ${lc}` : 'USD Index', asset: usdLocal },
+  ];
+}
+
+function renderPulseCard(item) {
+  const { label, asset } = item;
+  if (!asset) return `<div class="pulse-card"><p class="pulse-empty">—</p><p class="pulse-name dim">${label}</p></div>`;
+  const c24 = parseChange(asset.change_24h);
+  const c7 = parseChange(asset.change_7d);
+  const isUp24 = c24 >= 0;
+  const isUp7 = c7 >= 0;
+  return `
+    <div class="pulse-card">
+      <div class="pulse-card-header">
+        <div>
+          <p class="pulse-sym">${asset.symbol || label}</p>
+          <p class="pulse-name">${asset.name || label}</p>
+        </div>
+        ${sentimentDot(asset.sentiment)}
+      </div>
+      <p class="pulse-price">${fmtPrice(asset.current_price)}</p>
+      <div class="pulse-changes">
+        <span class="${isUp24 ? 'up' : 'down'}">${isUp24 ? '▲' : '▼'} ${Math.abs(c24).toFixed(2)}% 24h</span>
+        <span class="${isUp7 ? 'up dim' : 'down dim'}">${isUp7 ? '+' : ''}${c7.toFixed(2)}% 7d</span>
+      </div>
+    </div>`;
+}
+
+// ─── Left Column ─────────────────────────────────────────────────────────────
+function renderMacro(m) {
+  if (!m) return '';
+  const factors = (m.key_factors || []).map(f => `<li class="factor-item">${f}</li>`).join('');
+  const rate = m.interest_rate_outlook || '';
+  const inf = m.inflation_outlook || '';
+  const geo = m.geopolitical_risk || '';
+  return `
+    <div class="card">
+      <p class="card-title">${t('macro.title')}</p>
+      <p class="macro-summary">${m.summary || ''}</p>
+      <div class="macro-badges">
+        ${rate ? macroBadge(t(`rate.${rate}`) !== `rate.${rate}` ? t(`rate.${rate}`) : `Rates: ${rate}`, rateColor(rate)) : ''}
+        ${inf ? macroBadge(t(`inf.${inf}`) !== `inf.${inf}` ? t(`inf.${inf}`) : `Inflation: ${inf}`, infColor(inf)) : ''}
+        ${geo ? macroBadge(t(`geo.${geo}`) !== `geo.${geo}` ? t(`geo.${geo}`) : `Geo: ${geo}`, geoColor(geo)) : ''}
+      </div>
+      ${factors ? `<p class="card-title">${t('macro.factors')}</p><ul class="factor-list">${factors}</ul>` : ''}
+    </div>`;
+}
+
+function renderWarnings(data) {
+  const warns = data.warnings || [];
+  if (!warns.length) return '';
+  const items = warns.map(w => `<div class="warn-item"><span class="warn-icon">⚠</span><span>${w}</span></div>`).join('');
+  return `
+    <div class="card">
+      <p class="card-title">${t('warnings.title')}</p>
+      <div class="gap-s">${items}</div>
+    </div>`;
+}
+
+function renderAllocation(data) {
+  const alloc = data.portfolio_allocation;
+  if (!alloc) return '';
+  const colors = { crypto: '#8b5cf6', stocks: '#2563eb', currencies: '#10b981', materials: '#f59e0b', cash: '#6b7280' };
+  const keys = Object.keys(alloc);
+  const legend = keys.map(k => {
+    const pct = alloc[k];
+    const lbl = k === 'cash' ? t('alloc.cash') : t(`sectors.${k}`) !== `sectors.${k}` ? t(`sectors.${k}`) : k;
+    return `
+      <div class="alloc-row">
+        <div class="alloc-dot-lbl">
+          <span class="adot" style="background:${colors[k] || '#999'}"></span>
+          <span>${lbl}</span>
+        </div>
+        <span class="alloc-pct">${pct}%</span>
+      </div>`;
+  }).join('');
+  return `
+    <div class="card">
+      <p class="card-title">${t('alloc.title')}</p>
+      <div class="alloc-chart-wrap"><canvas id="alloc-chart"></canvas></div>
+      <div class="alloc-legend">${legend}</div>
+    </div>`;
+}
+
+function renderInsights(data) {
+  const insights = data.cross_sector_insights || [];
+  if (!insights.length) return '';
+  const items = insights.map(i => `
+    <div class="insight-item">
+      <p class="insight-text">${i.insight || ''}</p>
+      ${i.implication ? `<p class="insight-impl-label">${t('insights.impl')}</p><p class="insight-impl">${i.implication}</p>` : ''}
+    </div>`).join('');
+  return `
+    <div class="card">
+      <p class="card-title">${t('insights.title')}</p>
+      <div class="gap-s">${items}</div>
+    </div>`;
+}
+
+function renderDisclaimer() {
+  return `<div class="disclaimer-card">${t('disclaimer.text')}</div>`;
+}
+
+// ─── Center Column ────────────────────────────────────────────────────────────
+function renderMyPortfolio(data) {
+  const p = data.my_portfolio;
+  if (!p) return '';
+  const assets = (p.assets || []).map(a => {
+    const lc = a.local_currency || data.local_currency || '';
+    const localPrice = a.price_local ? `<br><span class="p-price-local">${new Intl.NumberFormat('en-US', { maximumFractionDigits: 0 }).format(a.price_local)} ${lc}</span>` : '';
+    const c24 = parseChange(a.change_24h);
+    const isUp = c24 >= 0;
+    return `
+      <div class="p-asset-row">
+        <span class="p-sym">${a.symbol || ''}</span>
+        <span class="p-name">${a.name || ''}</span>
+        <div class="p-price">
+          <div class="p-price-main">$${a.price_usd ? fmtPrice(a.price_usd) : '—'}${localPrice}</div>
+        </div>
+        <div style="margin-left:0.5rem;flex-shrink:0;">
+          <span class="${isUp ? 'up' : 'down'}" style="font-size:0.6rem">${isUp ? '▲' : '▼'} ${Math.abs(c24).toFixed(1)}%</span>
+        </div>
+        <div style="margin-left:0.375rem;flex-shrink:0;">${recBadge(a.recommendation)}</div>
+      </div>`;
+  }).join('');
+  return `
+    <div class="card">
+      <p class="card-title">${t('portfolio.title')}</p>
+      ${p.summary ? `<p class="portfolio-summary-text">${p.summary}</p>` : ''}
+      <div class="portfolio-meta">
+        ${p.risk_assessment ? `<span class="badge badge-currency">${t('portfolio.risk')}: ${p.risk_assessment}</span>` : ''}
+      </div>
+      ${p.rebalance_suggestion ? `<div class="portfolio-rebalance"><strong>${t('portfolio.rebalance')}:</strong> ${p.rebalance_suggestion}</div>` : ''}
+      <div>${assets}</div>
+    </div>`;
+}
+
+function renderSectors(data) {
+  const sectors = data.sectors || {};
+  const order = ['crypto', 'stocks', 'currencies', 'materials'];
+  const items = order.filter(k => sectors[k]).map(k => {
+    const s = sectors[k];
+    const sectorLabel = t(`sectors.${k}`);
+    const assetsHtml = (s.assets || []).map(a => {
+      const c24 = parseChange(a.change_24h);
+      const isUp = c24 >= 0;
+      return `
+        <div class="asset-mini">
+          <span class="am-sym">${a.symbol || ''}</span>
+          <span class="am-name">${a.name || ''}</span>
+          <span class="am-price">${fmtPrice(a.current_price)}</span>
+          <div class="am-changes">
+            <span class="${isUp ? 'up' : 'down'}">${isUp ? '▲' : '▼'} ${Math.abs(c24).toFixed(2)}%</span>
+            <span class="dim" style="font-size:0.5rem">${parseChange(a.change_7d).toFixed(1)}% 7d</span>
+          </div>
+          <div class="am-rec">${recBadge(a.recommendation)}</div>
+        </div>`;
+    }).join('');
+    return `
+      <div class="sector-item" id="sec-${k}">
+        <div class="sector-hdr" onclick="toggleSector('${k}')">
+          <div class="sector-hdr-left">
+            <span class="sector-hdr-name">${sectorLabel}</span>
+            ${outlookBadge(s.sector_outlook)}
+          </div>
+          <span class="chevron" id="chev-${k}">▼</span>
+        </div>
+        <div class="sector-body" id="secbody-${k}">
+          ${s.sector_summary ? `<p class="sector-sum">${s.sector_summary}</p>` : ''}
+          ${s.top_pick ? `<p class="sector-top">${t('sectors.top')}: <span>${s.top_pick}</span></p>` : ''}
+          ${s.top_pick_reasoning ? `<p class="sector-sum mt-s">${s.sector_reasoning || ''}</p>` : ''}
+          <div style="margin-top:0.375rem">${assetsHtml}</div>
+        </div>
+      </div>`;
+  }).join('');
+  return `
+    <div class="card">
+      <p class="card-title">${t('sectors.title')}</p>
+      <div class="gap-s">${items}</div>
+    </div>`;
+}
+
+// ─── Right Column ─────────────────────────────────────────────────────────────
+function renderTopPicks(data) {
+  const picks = data.risk_adjusted_picks || [];
+  if (!picks.length) return '';
+  const items = picks.map(p => {
+    const confPct = ((p.confidence || 0) / 10) * 100;
+    const sectorLabel = t(`sectors.${p.sector}`) !== `sectors.${p.sector}` ? t(`sectors.${p.sector}`) : p.sector || '';
+    return `
+      <div class="pick-card">
+        <div class="pick-hdr">
+          <div class="pick-name-wrap">
+            <p class="pick-rank">#${p.rank} · ${sectorLabel}</p>
+            <p class="pick-name">${p.name || ''}</p>
+            <p class="pick-symbol">${p.symbol || ''}</p>
+          </div>
+          ${recBadge(p.recommendation)}
+        </div>
+        <div class="conf-bar-wrap">
+          <div class="conf-bar"><div class="conf-fill" style="width:${confPct}%"></div></div>
+          <span class="conf-label">${t('picks.confidence')} ${p.confidence || 0}/10</span>
+        </div>
+        ${p.reasoning ? `<p class="pick-reasoning">${p.reasoning}</p>` : ''}
+        ${p.position_size ? `<p class="pick-position">${t('picks.position')}: ${p.position_size}</p>` : ''}
+      </div>`;
+  }).join('');
+  return `
+    <div class="card">
+      <p class="card-title">${t('picks.title')}</p>
+      <div class="gap-s">${items}</div>
+    </div>`;
+}
+
+function renderAccuracy(data) {
+  const acc = data.historical_accuracy;
+  if (!acc) return '';
+  const pct = acc.accuracy_pct !== undefined ? `${acc.accuracy_pct}%` : '—';
+  return `
+    <div class="card">
+      <p class="card-title">${t('accuracy.title')}</p>
+      <div class="accuracy-grid">
+        <div class="accuracy-stat">
+          <div class="acc-val">${acc.calls_made || 0}</div>
+          <div class="acc-label">${t('accuracy.calls')}</div>
+        </div>
+        <div class="accuracy-stat">
+          <div class="acc-val">${acc.calls_correct || 0}</div>
+          <div class="acc-label">${t('accuracy.correct')}</div>
+        </div>
+        <div class="accuracy-stat">
+          <div class="acc-val">${pct}</div>
+          <div class="acc-label">${t('accuracy.accuracy')}</div>
+        </div>
+      </div>
+      ${acc.notable ? `<div class="acc-notable"><strong>${t('accuracy.notable')}:</strong> ${acc.notable}</div>` : ''}
+    </div>`;
+}
+
+// ─── Chart ────────────────────────────────────────────────────────────────────
+let allocChart = null;
+function initAllocChart(data) {
+  const canvas = document.getElementById('alloc-chart');
+  if (!canvas || !window.Chart) return;
+  const alloc = data.portfolio_allocation || {};
+  const colors = { crypto: '#8b5cf6', stocks: '#2563eb', currencies: '#10b981', materials: '#f59e0b', cash: '#6b7280' };
+  const keys = Object.keys(alloc);
+  const labels = keys.map(k => {
+    if (k === 'cash') return t('alloc.cash');
+    const tr = t(`sectors.${k}`);
+    return tr !== `sectors.${k}` ? tr : k;
+  });
+  if (allocChart) { allocChart.destroy(); }
+  allocChart = new Chart(canvas, {
+    type: 'doughnut',
+    data: {
+      labels,
+      datasets: [{
+        data: keys.map(k => alloc[k]),
+        backgroundColor: keys.map(k => colors[k] || '#999'),
+        borderWidth: 1,
+        borderColor: '#fff',
+      }]
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: true,
+      plugins: { legend: { display: false }, tooltip: { callbacks: { label: ctx => `${ctx.label}: ${ctx.raw}%` } } },
+      cutout: '60%',
+    }
+  });
+}
+
+// ─── Sector toggle ────────────────────────────────────────────────────────────
+function toggleSector(key) {
+  const body = document.getElementById(`secbody-${key}`);
+  const chev = document.getElementById(`chev-${key}`);
+  if (!body) return;
+  const isOpen = body.style.display !== 'none' && body.style.display !== '';
+  body.style.display = isOpen ? 'none' : 'block';
+  if (chev) chev.style.transform = isOpen ? 'rotate(0deg)' : 'rotate(180deg)';
+}
+
+// ─── Main render ─────────────────────────────────────────────────────────────
+function renderApp() {
+  const d = window.REPORT_DATA;
+  const cfg = window.USER_CONFIG || {};
+  currentLang = cfg.language || 'es';
+  const app = document.getElementById('app');
+
+  if (!d) {
+    app.innerHTML = `
+      <div class="no-data">
+        <h1>portafolio.</h1>
+        <p>No report data found. Run <code>/portafolio</code> to generate a report.</p>
+      </div>`;
+    return;
+  }
+
+  // Localized date
+  const locale = currentLang === 'es' ? 'es-ES' : 'en-US';
+  const dateStr = d.generated_at ? new Date(d.generated_at).toLocaleDateString(locale, {
+    weekday: 'long', year: 'numeric', month: 'long', day: 'numeric'
+  }) : '';
+  const timestamp = d.generated_at ? new Date(d.generated_at).toLocaleString(locale) : '';
+
+  const pulseItems = findPulseAssets(d);
+
+  // Sector bodies default: first two open, rest closed
+  const sectorOrder = ['crypto', 'stocks', 'currencies', 'materials'];
+
+  app.innerHTML = `
+    <div class="lang-picker">
+      <button class="lang-btn ${currentLang === 'es' ? 'active' : ''}" onclick="switchLang('es')">ES</button>
+      <button class="lang-btn ${currentLang === 'en' ? 'active' : ''}" onclick="switchLang('en')">EN</button>
+    </div>
+
+    <header class="report-header">
+      <div class="header-inner">
+        <div>
+          <h1>portafolio.</h1>
+          <p class="header-sub">${t('header.by')} <strong>Cristhian White</strong> | <span style="color:var(--muted)">${t('header.brand')}</span></p>
+        </div>
+        <div class="header-right">
+          <div class="header-date">
+            <strong>${dateStr}</strong>
+            ${t('header.report')}
+          </div>
+          ${profileBadge(d.risk_profile)}
+          ${d.local_currency ? `<span class="badge badge-currency">${d.local_currency}</span>` : ''}
+        </div>
+      </div>
+    </header>
+
+    <div class="pulse-strip">
+      <p class="pulse-label">${t('pulse.title')}</p>
+      <div class="pulse-grid">
+        ${pulseItems.map(renderPulseCard).join('')}
+      </div>
+    </div>
+
+    <div class="main-content">
+      <div class="col col-left">
+        ${renderMacro(d.macro_environment)}
+        ${renderWarnings(d)}
+        ${renderAllocation(d)}
+        ${renderInsights(d)}
+        ${renderDisclaimer()}
+      </div>
+      <div class="col col-center">
+        ${renderMyPortfolio(d)}
+        ${renderSectors(d)}
+      </div>
+      <div class="col col-right">
+        ${renderTopPicks(d)}
+        ${renderAccuracy(d)}
+      </div>
+    </div>
+
+    <footer class="report-footer">
+      <div>
+        portafolio. by <strong style="color:var(--strong)">Cristhian White</strong>
+        <span style="margin:0 0.25rem">|</span>
+        <span>${t('footer.tagline')}</span>
+      </div>
+      <div>${t('footer.generated')} ${timestamp}</div>
+    </footer>`;
+
+  // Init chart and default sector states after DOM update
+  setTimeout(() => {
+    initAllocChart(d);
+    // All sectors start collapsed
+    sectorOrder.forEach(k => {
+      const body = document.getElementById(`secbody-${k}`);
+      if (body) body.style.display = 'none';
+    });
+  }, 0);
+}
+
+function switchLang(lang) {
+  currentLang = lang;
+  if (window.USER_CONFIG) window.USER_CONFIG.language = lang;
+  renderApp();
+}
+
+window.addEventListener('DOMContentLoaded', renderApp);
+</script>
+</body>
+</html>

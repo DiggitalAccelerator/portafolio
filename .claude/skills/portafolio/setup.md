@@ -1,14 +1,12 @@
 ---
 name: portafolio-setup
-version: 1.0.0
 description: |
   Wizard de configuración inicial para el skill Portafolio. Configura perfil de riesgo,
   moneda local, watchlist de activos personales e idioma.
   Ejecutar antes de usar /portafolio por primera vez.
   Trigger phrases: "configurar portafolio", "portafolio setup", "setup portafolio",
   "configurar mi portafolio", "primera vez", "inicializar portafolio".
-user_invocable: true
-argument-hint: ""
+user-invocable: true
 ---
 
 # Portafolio — Wizard de Configuración
@@ -120,11 +118,21 @@ Escribir este JSON a `config/user-config.json` en el directorio de instalación 
 
 Para encontrar el directorio de instalación, usar Glob para buscar `**/portafolio/.claude/skills/portafolio/setup.md` y tomar el directorio raíz (3 niveles arriba del archivo encontrado).
 
-### Paso 8 — Confirmar
+### Paso 8 — Commitear configuración
+
+Ejecutar desde el directorio de instalación:
+
+```bash
+git add config/user-config.json
+git commit -m "⚙️ Portafolio config"
+git push
+```
+
+### Paso 9 — Confirmar
 
 Mostrar al usuario:
 
-> ✅ **¡Configuración guardada!**
+> ✅ **¡Configuración guardada y publicada!**
 >
 > - **Perfil:** {risk_profile}
 > - **Moneda local:** {local_currency}
@@ -134,7 +142,7 @@ Mostrar al usuario:
 >
 > Los pares forex y commodities del watchlist pueden agregarse directamente en `config/user-config.json` editando los arrays `forex` y `commodities`.
 >
-> Ahora ejecuta `/portafolio` para generar tu primer reporte de mercados.
+> Ahora ejecuta `/portafolio` para generar tu primer reporte de mercados. El reporte se guardará en `output/report.html` — ábrelo directamente en tu browser, sin servidor.
 
 ## Reglas
 

@@ -1,16 +1,14 @@
 ---
 name: portafolio
-version: 1.0.0
 description: |
   Sistema multi-agente de análisis de mercados e inversiones by Cristhian White.
   Lanza 4 agentes en paralelo (Crypto, Acciones, Forex, Materias Primas) + Estratega,
   adapta al perfil de riesgo del usuario, incluye análisis del watchlist personal,
-  y genera un dashboard interactivo con 3 temas visuales.
+  y genera un reporte HTML estático auto-contenido (sin servidor, sin npm).
   Trigger phrases: "portafolio", "analizar mercados", "análisis de inversión",
   "reporte de portafolio", "qué debo invertir", "análisis de mercado",
   "reporte semanal", "análisis diario", "run portafolio".
-user_invocable: true
-argument-hint: ""
+user-invocable: true
 ---
 
 # Portafolio — Sistema Multi-Agente de Análisis de Mercados
@@ -166,47 +164,36 @@ Combinar todos los outputs en el objeto final:
 2. Guardar REPORT_DATA como `output/history/YYYY-MM-DD.json` usando la fecha de hoy.
 3. Mantener solo los últimos 30 archivos: si hay más de 30 archivos JSON en `output/history/`, eliminar los más antiguos.
 
-### Paso 8 — Escribir reporte al dashboard
+### Paso 8 — Generar reporte HTML estático
 
-1. Crear `dashboard/public/data/` si no existe.
-2. Escribir REPORT_DATA a `dashboard/public/data/report.json`.
-3. Copiar `config/user-config.json` a `dashboard/public/data/config.json` para que el dashboard lea el tema visual correcto.
+1. Leer `templates/report.html` desde el directorio de instalación.
+2. Construir el string de inyección reemplazando las dos líneas de datos en el template:
+   - Reemplazar `window.REPORT_DATA = null;` → `window.REPORT_DATA = {JSON completo de REPORT_DATA};`
+   - Reemplazar `window.USER_CONFIG = { language: "es", theme: "light" };` → `window.USER_CONFIG = {JSON del config del usuario};`
+3. Crear el directorio `output/` si no existe.
+4. Escribir el resultado a `output/report.html`.
 
-### Paso 9 — Traducir a español (si aplica)
+### Paso 9 — Publicar reporte via git
 
-Si `config.language === "es"`:
-
-Lanzar un Translation Agent con este prompt:
-> Eres un traductor financiero. Traduce el siguiente JSON del inglés al español. Traduce SOLO los campos de texto legible: executive_summary, macro_environment.summary, macro_environment.key_factors[], cross_sector_insights[].insight, cross_sector_insights[].implication, warnings[], historical_accuracy.notable, sectors[*].sector_summary, sectors[*].top_pick_reasoning, sectors[*].assets[*].reasoning, sectors[*].assets[*].key_news[], sectors[*].assets[*].social_highlights[], my_portfolio.summary (si existe), my_portfolio.rebalance_suggestion (si existe), my_portfolio.assets[*].reasoning (si existe), my_portfolio.correlations[*].note (si existe). NO traduzcas: números, tickers, precios, fechas, porcentajes, nombres de activos, símbolos, URLs, ni valores enum (bullish, buy, high, conservative, etc.). Devuelve JSON válido con la misma estructura.
->
-> [Aquí pegar el report.json completo]
-
-Escribir el resultado traducido a `dashboard/public/data/report-es.json`.
-
-Si `config.language === "en"`: saltar este paso.
-
-### Paso 10 — Servir dashboard
-
-1. Verificar si `dashboard/node_modules/` existe. Si no, ejecutar: `npm install --prefix dashboard`
-2. Verificar si el puerto 3420 está en uso: `lsof -i :3420`
-3. Si ya corre en 3420, no iniciar nuevo servidor (el usuario refresca el browser).
-4. Si no, iniciar en background: `npm run dev --prefix dashboard -- -p 3420`
-5. Esperar 3 segundos: `sleep 3`
-6. Mostrar al usuario:
+1. Hacer `git add output/report.html output/history/` desde el directorio de instalación.
+2. Hacer commit: `git commit -m "📊 Portafolio [YYYY-MM-DD]"` (usar la fecha de hoy).
+3. Hacer `git push`.
+4. Mostrar al usuario:
 
 > **✅ Reporte de Portafolio listo!**
-> Abre: http://localhost:3420
+>
+> Abre `output/report.html` en tu browser — no necesitas servidor ni npm.
 >
 > **Perfil:** {risk_profile} | **Moneda:** {local_currency} | **Top Pick:** {símbolo y nombre del #1 risk-adjusted pick}
 >
-> El reporte incluye análisis de tu watchlist personal, estrategia multi-sector, sentimiento social, y precisión histórica.
+> El reporte incluye análisis de tu watchlist personal, estrategia multi-sector, sentimiento social, y precisión histórica. Usa los botones ES / EN para cambiar el idioma de la interfaz.
 
 ## Manejo de Errores
 
 - Si `WebSearch` no devuelve resultados para un activo, intentar `WebFetch` en Yahoo Finance, CoinGecko, o Google Finance.
 - Si un agente devuelve JSON malformado, re-promptear una vez con instrucciones de corrección. Si sigue fallando, marcar ese sector como `"data_unavailable": true`.
 - Si el Agente Estratega falla, hacer ranking simple por confidence score y anotar "Strategy analysis unavailable" en el reporte.
-- Si Node.js no está disponible, usar: `python3 -m http.server 8420 --directory output` y servir `output/report.html` (fallback HTML en assets/).
+- Si `git push` falla, indicar al usuario que abra `output/report.html` directamente desde su máquina local (el archivo ya fue escrito y no requiere servidor).
 - Si no hay internet, generar reporte con mensajes "Sin datos disponibles" por sector.
 
 ## Notas Importantes
