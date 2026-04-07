@@ -1,6 +1,6 @@
 # Portafolio — Multi-Agent Investment Analysis Skill
 
-**by @soyenriquerocha**
+**by @soycristhianwhite**
 
 A Claude Code skill that spawns 5 specialized AI research agents to analyze investment opportunities across crypto, stocks, forex, and commodities. Adapts to your risk profile, tracks historical accuracy, and generates an interactive Next.js dashboard with full Spanish/English support.
 
@@ -97,7 +97,7 @@ Portafolio is a **Claude Code skill** — a reusable prompt-and-tooling package 
 ### Option A: One-liner (fastest)
 
 ```bash
-curl -sL https://raw.githubusercontent.com/Hainrixz/maia-skill/main/install.sh | bash
+curl -sL https://raw.githubusercontent.com/DiggitalAccelerator/portafolio/main/install.sh | bash
 ```
 
 This clones the repo, symlinks the skill into Claude Code, and installs dashboard dependencies automatically.
@@ -105,21 +105,21 @@ This clones the repo, symlinks the skill into Claude Code, and installs dashboar
 ### Option B: Claude Code plugin
 
 ```bash
-claude plugin install Hainrixz/maia-skill
+claude plugin install DiggitalAccelerator/portafolio
 ```
 
 ### Option C: Manual setup
 
 ```bash
 # 1. Clone the repo
-git clone https://github.com/Hainrixz/maia-skill.git
+git clone https://github.com/DiggitalAccelerator/portafolio.git
 
 # 2. Symlink skill into Claude Code
 mkdir -p ~/.claude/skills
-ln -s "$(pwd)/maia-skill/.claude/skills/investment-analysis" ~/.claude/skills/investment-analysis
+ln -s "$(pwd)/portafolio/.claude/skills/portafolio" ~/.claude/skills/portafolio
 
 # 3. Install dashboard dependencies
-npm install --prefix maia-skill/dashboard
+npm install --prefix portafolio/dashboard
 ```
 
 The skill auto-activates when you mention investment-related topics in Claude Code.
@@ -214,7 +214,7 @@ This tool is for **informational and educational purposes only**. It does not co
 
 # Portafolio — Skill de Analisis de Inversiones Multi-Agente
 
-**por @soyenriquerocha**
+**por @soycristhianwhite**
 
 Un skill de Claude Code que lanza 5 agentes de investigacion especializados para analizar oportunidades de inversion en crypto, acciones, forex y materias primas. Se adapta a tu perfil de riesgo, rastrea la precision historica y genera un dashboard interactivo en Next.js con soporte completo en espanol e ingles.
 
@@ -309,7 +309,7 @@ Portafolio es un **skill de Claude Code** — un paquete reutilizable de prompts
 ### Opcion A: Una sola linea (la mas rapida)
 
 ```bash
-curl -sL https://raw.githubusercontent.com/Hainrixz/maia-skill/main/install.sh | bash
+curl -sL https://raw.githubusercontent.com/DiggitalAccelerator/portafolio/main/install.sh | bash
 ```
 
 Esto clona el repo, enlaza el skill a Claude Code e instala las dependencias del dashboard automaticamente.
@@ -317,21 +317,21 @@ Esto clona el repo, enlaza el skill a Claude Code e instala las dependencias del
 ### Opcion B: Plugin de Claude Code
 
 ```bash
-claude plugin install Hainrixz/maia-skill
+claude plugin install DiggitalAccelerator/portafolio
 ```
 
 ### Opcion C: Configuracion manual
 
 ```bash
 # 1. Clonar el repo
-git clone https://github.com/Hainrixz/maia-skill.git
+git clone https://github.com/DiggitalAccelerator/portafolio.git
 
 # 2. Enlazar el skill en Claude Code
 mkdir -p ~/.claude/skills
-ln -s "$(pwd)/maia-skill/.claude/skills/investment-analysis" ~/.claude/skills/investment-analysis
+ln -s "$(pwd)/portafolio/.claude/skills/portafolio" ~/.claude/skills/portafolio
 
 # 3. Instalar dependencias del dashboard
-npm install --prefix maia-skill/dashboard
+npm install --prefix portafolio/dashboard
 ```
 
 El skill se activa automaticamente cuando mencionas temas de inversion en Claude Code.
@@ -427,3 +427,15 @@ MIT — ver [LICENSE](LICENSE)
 ## Contribuir
 
 Codigo abierto. PRs son bienvenidos!
+
+## Creditos
+
+Esta herramienta esta basada en el trabajo original de **@soyenriquerocha** — creador de la primera version de este skill. Su diseno de agentes en paralelo, arquitectura del dashboard y logica de analisis multi-sectorial fueron la base sobre la que se construyo esta version. Gracias por compartirlo con la comunidad.
+
+---
+
+<a id="credits"></a>
+
+## Credits
+
+This tool is based on the original work by **@soyenriquerocha** — creator of the first version of this skill. The parallel agent design, dashboard architecture, and multi-sector analysis logic were the foundation this version was built on. Thank you for sharing it with the community.

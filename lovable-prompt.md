@@ -1,14 +1,14 @@
 # Prompt Lovable — Landing Portafolio
 
 **Proyecto:** Portafolio (regalo ManyChat)
-**Marca:** Cristian White · Diggital Accelerator
+**Marca:** Cristhian White · Diggital Accelerator
 **Tipo:** Página de entrega de regalo (no de venta)
 **Estilo:** Dark, minimalista, Montserrat
 
 ---
 
 ```
-Build a dark, minimalist "gift delivery" page in Spanish for Portafolio — a free Claude Code skill created by Cristian White from Diggital Accelerator. This is not a sales page. It's a thank-you/download page where the user receives the tool and learns how to use it.
+Build a dark, minimalist "gift delivery" page in Spanish for Portafolio — a free Claude Code skill created by Cristhian White from Diggital Accelerator. This is not a sales page. It's a thank-you/download page where the user receives the tool and learns how to use it.
 
 VISUAL IDENTITY:
 - Background: #0a0e1a
@@ -49,18 +49,18 @@ PAGE STRUCTURE:
    Card 1 — Badge "01" + label pill "Recomendado":
    Title: "Una sola línea"
    Description: "Abrí tu terminal y pegá este comando. Clona el repositorio, enlaza el skill a Claude Code e instala el dashboard automáticamente."
-   Code block: curl -sL https://raw.githubusercontent.com/Hainrixz/maia-skill/main/install.sh | bash
+   Code block: curl -sL https://raw.githubusercontent.com/DiggitalAccelerator/portafolio/main/install.sh | bash
 
    Card 2 — Badge "02":
    Title: "Plugin de Claude Code"
-   Code block: claude plugin install Hainrixz/maia-skill
+   Code block: claude plugin install DiggitalAccelerator/portafolio
 
    Card 3 — Badge "03":
    Title: "Instalación manual"
    Three sequential code blocks:
-   git clone https://github.com/Hainrixz/maia-skill.git
-   mkdir -p ~/.claude/skills && ln -s "$(pwd)/maia-skill/.claude/skills/investment-analysis" ~/.claude/skills/investment-analysis
-   npm install --prefix maia-skill/dashboard
+   git clone https://github.com/DiggitalAccelerator/portafolio.git
+   mkdir -p ~/.claude/skills && ln -s "$(pwd)/portafolio/.claude/skills/portafolio" ~/.claude/skills/portafolio
+   npm install --prefix portafolio/dashboard
 
 5. CÓMO USARLO — Section title: "Tu primer análisis". Step-by-step horizontal flow on desktop, vertical on mobile. Four steps connected with a subtle line:
    - Paso 1: "Abrí Claude Code" — "En cualquier conversación."
@@ -77,7 +77,7 @@ PAGE STRUCTURE:
    /loop 168h /investment-analysis
    Below: muted note "Usá el comando /loop de Claude Code. El reporte se genera solo y queda guardado en output/ con la fecha."
 
-7. FOOTER — Single line. "Creado por Cristian White · Diggital Accelerator" left. "Gratis · MIT License" right. Border-top 1px #2a3452.
+7. FOOTER — Single line. "Creado por Cristhian White · Diggital Accelerator" left. "Gratis · MIT License" right. Border-top 1px #2a3452.
 
 DESIGN REQUIREMENTS:
 - Mobile-first, fully responsive
