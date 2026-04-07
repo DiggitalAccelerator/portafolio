@@ -1,0 +1,13 @@
+{
+  "risk_profile": "aggressive",
+  "local_currency": "USD",
+  "watchlist": {
+    "crypto": ["BTC", "ETH", "SOL", "ADA"],
+    "stocks": ["AAPL", "NVDA", "MELI", "TSLA"],
+    "forex": ["USD/COP"],
+    "commodities": []
+  },
+  "theme": "light",
+  "language": "es",
+  "created_at": "2026-03-26T00:00:00.000Z"
+}

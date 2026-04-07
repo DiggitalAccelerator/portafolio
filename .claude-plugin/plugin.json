@@ -1,0 +1,14 @@
+{
+  "name": "portafolio",
+  "version": "1.0.0",
+  "description": "Portafolio — Multi-agent investment analysis system by Cristhian White. Analyzes crypto, stocks, forex, and commodities with your personal watchlist. Generates a branded interactive dashboard.",
+  "author": {
+    "name": "Cristhian White",
+    "url": "https://github.com/DiggitalAccelerator"
+  },
+  "homepage": "https://github.com/DiggitalAccelerator/portafolio#readme",
+  "repository": "https://github.com/DiggitalAccelerator/portafolio",
+  "license": "MIT",
+  "keywords": ["investment", "analysis", "trading", "market-research", "finance", "crypto", "stocks", "forex", "commodities", "portfolio", "watchlist"],
+  "skills": "./.claude/skills/"
+}
